@@ -112,7 +112,7 @@ function s:exclude_common_dirs()
     endif
     return s:_exclude_common_dirs_
 endfunction
-let s:_exclude_common_dirs_ = {}
+let s:_exclude_common_dirs_ = ""
 
 
 function s:extract_attribute(asttribute, name)
