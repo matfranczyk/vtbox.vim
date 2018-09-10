@@ -16,11 +16,11 @@ function s:process(input)
     let l:object = vtbox#workspace#find#settings#get().object()
 
     if has_key(a:input, "names")
-        call l:object.names(a:input.names)
+        call l:object.names( vtbox#utils#string#wrap(a:input.names, '*') )
     endif
 
     if has_key(a:input, "inames")
-        call l:object.inames(a:input.inames)
+        call l:object.inames( vtbox#utils#string#wrap(a:input.inames, '*') )
     endif
 
     call vtbox#find#unite(l:object)

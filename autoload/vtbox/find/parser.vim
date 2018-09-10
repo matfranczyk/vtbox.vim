@@ -12,11 +12,11 @@ function s:process(parsed)
     let l:object = vtbox#find#object#new(a:parsed)
 
     if has_key(a:parsed, "names")
-        call l:object.names(a:parsed.names)
+        call l:object.names( vtbox#utils#string#wrap(a:parsed.names, '*') )
     endif
 
     if has_key(a:parsed, "inames")
-        call l:object.inames(a:parsed.inames)
+        call l:object.inames( vtbox#utils#string#wrap(a:parsed.inames, '*') )
     endif
 
     return vtbox#find#unite(l:object)

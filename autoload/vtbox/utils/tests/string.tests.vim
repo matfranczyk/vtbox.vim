@@ -47,6 +47,19 @@ let s:assert = themis#helper('assert')
                     \ vtbox#utils#string#has('/falder/has', '~'))
     endfunction
 
+
+    "
+    " [test suite]
+    "
+    let s:suite = themis#suite('WrapMethodTs')
+
+    function s:suite.wrap()
+        call s:assert.equals(
+                    \ vtbox#utils#string#wrap("text", "*"),
+                    \ "*text*"
+                    \ )
+    endfunction
+
 "---------------------------------------
 let &cpo = s:cpo_save | unlet s:cpo_save
 "---------------------------------------

@@ -40,6 +40,21 @@ function vtbox#utils#string#extract(text)
 endfunction
 
 
+function vtbox#utils#string#wrap(text, char)
+    let l:text = a:text
+
+    if l:text[0] != "*"
+        let l:text = a:char.l:text
+    endif
+
+    if l:text[-1] != "*"
+        let l:text = l:text.a:char
+    endif
+
+    return l:text
+endfunction
+
+
 let s:string_lib = vtbox#vital#lib('Data.String')
 
 "---------------------------------------
