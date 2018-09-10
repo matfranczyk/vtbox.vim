@@ -160,7 +160,7 @@ endfunction
 
 
 function s:throw(info)
-    throw "[find:shell:command] ".a:info. " >--> run & fix :ProjectFind --configuration"
+    throw "[find:shell:command] ".a:info
 endfunction
 
 "---------------------------------------

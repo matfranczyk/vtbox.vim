@@ -214,7 +214,7 @@ endfunction
 
 
 function s:throw(info)
-    throw "[grep:shell:command] ".a:info. " >--> run & fix :ProjectGrep --configuration"
+    throw "[grep:shell:command] ".a:info
 endfunction
 
 "---------------------------------------
