@@ -1,0 +1,14 @@
+vtbox
+ccfe1e17859e824f0f1a13440ca2020929d531fd
+
+System.Filepath
+Prelude
+OptionParser
+Data.String
+System.Job
+Text.TOML
+Data.List
+Vim.Console
+System.Cache.SingleFile
+Vim.Buffer
+Vim.Message

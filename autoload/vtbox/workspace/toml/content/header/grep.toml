@@ -1,0 +1,13 @@
+# -----------------------------------------------------------------------------------
+#  [[GREP]] configuration        toml files format: https://github.com/toml-lang/toml
+# -----------------------------------------------------------------------------------
+# (x) there must be at least one [[files]] group of parameters
+# (x) [[files]]'s internal parameters format : string or list of strings
+#
+#  [[files]]
+#    paths   = "./"        [mandatory] path/s of files to grep
+#    include = ["*.txt"]   {optional} grep only files with name glob pattern
+#    exclude  = []         {optional} don't grep files with name glob patter
+#    exclude_dir = []      {optional} don't grep files in directory with glob pattern
+# -----------------------------------------------------------------------------------
+

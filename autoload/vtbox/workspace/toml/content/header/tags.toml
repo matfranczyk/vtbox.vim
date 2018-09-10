@@ -1,0 +1,16 @@
+# --------------------------------------------------------------------------------------------
+#  [[TAGS]] configuration                 toml files format: https://github.com/toml-lang/toml
+# --------------------------------------------------------------------------------------------
+# (x) there must be at least one [[files]] group of parameters
+# (x) [[files]]'s internal parameters format : string or list of strings
+#
+#  [[files]]
+#    paths   = "./"            [mandatory] path/s of files
+#    names   = "./"            [mandatory names and/or inames] filename globs  <sensitive>
+#    inames   = "./"           [mandatory names and/or inames] path/s of files <isensitive>
+#    exclude_file_names  = []  {optional} exclude files with pattern <sensitive>
+#    exclude_file_inames = []  {optional} exclude files with pattern <isensitive>
+#    exclude_dir_names   = []  {optional} exclude files in directory with pattern <sensitive>
+#    exclude_dir_inames  = []  {optional} exclude files in directory with pattern <isensitive>
+# --------------------------------------------------------------------------------------------
+

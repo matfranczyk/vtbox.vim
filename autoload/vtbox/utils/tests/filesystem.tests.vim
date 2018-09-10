@@ -1,0 +1,113 @@
+"----------------------------------
+let s:cpo_save = &cpo | set cpo&vim
+"----------------------------------
+let s:assert = themis#helper('assert')
+
+
+    "
+    " [test suite]
+    "
+    let s:suite = themis#suite('file()')
+
+
+    function! s:suite.should_return_full_path()
+        let l:path = "/home/temp/path"
+
+        call s:assert.equal(
+                    \ vtbox#utils#filesystem#full_path(l:path),
+                    \ l:path)
+    endfunction
+
+
+    function! s:suite.will_expand_path_with_getcwd()
+        let l:filename = "file"
+
+        call s:assert.equal(
+                    \ vtbox#utils#filesystem#full_path(l:filename),
+                    \ getcwd()."/".l:filename)
+    endfunction
+
+
+    "
+    " [test suite]
+    "
+    let s:suite = themis#suite('parent_path()')
+
+
+    function! s:suite.should_return_parent_directory()
+        let l:parent = getcwd()."/parent"
+
+        call s:assert.equal(
+                    \ vtbox#utils#filesystem#parent_path(l:parent."/file"),
+                    \ l:parent)
+    endfunction
+
+
+    "
+    " [test suite]
+    "
+    let s:suite = themis#suite('dirname()')
+
+    function! s:suite.return_dirname_for_directory_path()
+        let l:dirname = "directory"
+        let l:path = getcwd()."/".l:dirname
+
+        call s:assert.equal(
+                    \ vtbox#utils#filesystem#dirname(l:path),
+                    \ l:dirname)
+    endfunction
+
+
+    function! s:suite.substitute_path_separator()
+        let l:path = getcwd()
+
+        call s:assert.equal(
+                    \ vtbox#utils#filesystem#substitute_path_separator(l:path),
+                    \ l:path)
+    endfunction
+
+
+    function! s:suite.taking_filename_from_path()
+        let l:filename = "file.extension"
+
+        call s:assert.equal(
+                    \ vtbox#utils#filesystem#filename(getcwd()."/".l:filename),
+                    \ l:filename)
+    endfunction
+
+
+    "
+    " [test suite]
+    "
+    let s:suite = themis#suite('FirstValidPathTs')
+    let s:suite.valid_path = '/home'
+
+    function! s:suite.no_valid()
+        call s:assert.equals(
+                    \ vtbox#utils#filesystem#return_first_valid_directory(
+                    \   '/invalid/path/first',
+                    \   '/home/invalid/path/stub/2'),
+                    \ "")
+    endfunction
+
+
+    function! s:suite.first_valid_path()
+        call s:assert.equals(
+                    \ vtbox#utils#filesystem#return_first_valid_directory(
+                    \   self.valid_path,
+                    \   '/home/invalid/path/stub/2'),
+                    \ self.valid_path)
+    endfunction
+
+
+    function! s:suite.second_valid_path()
+        call s:assert.equals(
+                    \ vtbox#utils#filesystem#return_first_valid_directory(
+                    \   '/home/invalid/path/stub/2',
+                    \   self.valid_path),
+                    \ self.valid_path)
+    endfunction
+
+"---------------------------------------
+let &cpo = s:cpo_save | unlet s:cpo_save
+"---------------------------------------

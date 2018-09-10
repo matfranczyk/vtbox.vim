@@ -1,0 +1,7 @@
+fixed_pattern
+
+function getValue()
+    "empty body
+endfunction
+
+fixed_pattern something else
