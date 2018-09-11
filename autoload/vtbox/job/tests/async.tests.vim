@@ -42,7 +42,7 @@ endfunction
     endfunction
 
 
-    function s:suite.test()
+    function s:suite.checking_if_jobs_still_running()
         call s:job.launch()
 
         while s:job.is_running() | endwhile

@@ -33,6 +33,7 @@ function s:cache_path() dict
     return self._cache
 endfunction
 
+
 function s:configure() dict
     call s:default_commands()
 

@@ -3,7 +3,7 @@ let s:cpo_save = &cpo | set cpo&vim
 "----------------------------------
 
 let s:logger = vtbox#utils#logger#create()
-let s:ignore_dirs = ['.svn', '.git', vtbox#workspace#manager#cache#local().dirname()]
+let s:ignore_dirs = ['.svn', '.git', vtbox#workspace#manager#cache#dirname()]
 
 "
 " impl::api

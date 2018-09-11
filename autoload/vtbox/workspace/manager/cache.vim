@@ -10,17 +10,24 @@ function vtbox#workspace#manager#cache#local()
     endif
     return s:_instance_
 endfunction
+
+
+function vtbox#workspace#manager#cache#dirname()
+    return s:dirname
+endfunction
+
+"
+" ipml
+"
 let s:_instance_ = {}
+let s:dirname = get(g:, 'vimrc_cache_dirname', '.vim.cache')
 
 
 function s:factory()
-    let l:dirname = get(g:, 'vimrc_cache_dirname', '.vim.cache')
-
     let l:cache = {
         \ '_settings' : {
-        \       'dirname' : l:dirname,
-        \       'local'   : get(g:, 'vimrc_cache_local_path',  getcwd()."/".l:dirname),
-        \       'hybrid'  : get(g:, 'vimrc_cache_hybrid_path', expand("$HOME")."/".l:dirname."/hybrid/".substitute(getcwd(), '/', '_', 'g'))
+        \       'local'   : get(g:, 'vimrc_cache_local_path',  getcwd()."/".s:dirname),
+        \       'hybrid'  : get(g:, 'vimrc_cache_hybrid_path', expand("$HOME")."/".s:dirname."/hybrid/".substitute(getcwd(), '/', '_', 'g'))
         \ },
         \ '_select_path' : function('s:_select_path'),
         \ '_path'        : vtbox#utils#optional#create('vtbox:workspace:cache:path'),
@@ -28,7 +35,6 @@ function s:factory()
         \ 'is_available' : function('s:is_available'),
         \ 'create'       : function('s:create'),
         \ 'path'         : function('s:path'),
-        \ 'dirname'      : function('s:dirname'),
         \ }
 
     call l:cache._select_path() | return l:cache
@@ -39,10 +45,6 @@ endfunction
 "
 function s:path() dict
     return self._path.value()
-endfunction
-
-function s:dirname() dict
-    return self._settings.dirname
 endfunction
 
 
