@@ -4,9 +4,6 @@ let s:cpo_save = &cpo | set cpo&vim
 
 let s:strings = vtbox#vital#lib('Data.String')
 
-let s:shorten_path_pattern = '.....'
-let s:max_line_width = 180 + len(s:shorten_path_pattern)
-
 "
 " api::impl
 "
@@ -54,7 +51,9 @@ endfunction
 
 function s:shorten_candidate(item)
     return {
-        \ "word"         : s:strings.truncate_skipping(a:item.text, s:max_line_width, 0, ".....")
+        \ "word"         : s:strings.truncate_skipping(
+        \                       a:item.text,
+        \                       g:__vtbox_buffer_maxline_width, 0, g:__vtbox_buffer_shortner_sign)
         \                  ."\t".a:item.file,
         \ "action__path" : a:item.file,
         \ "action__line" : a:item.line,

@@ -11,9 +11,6 @@ endfunction
 "
 let s:strings = vtbox#vital#lib('Data.String')
 
-let s:shorten_path_pattern = '.....'
-let s:max_line_width = 180 + len(s:shorten_path_pattern)
-
 let s:converter = {
     \ 'name'        : 'vtbox_gtags_filter',
     \ 'description' : 'gtags: output format',
@@ -40,9 +37,11 @@ function s:candidate(item, text_width)
 endfunction
 
 function s:shorten_candidate(item)
-    let a:item.word = s:strings.truncate_skipping(a:item.word, s:max_line_width, 0, ".....")
-                    \ ."\t"
-                    \ .a:item.action__path
+    let a:item.word = s:strings.truncate_skipping(
+                \           a:item.word,
+                \           g:__vtbox_buffer_maxline_width, 0, g:__vtbox_buffer_shortner_sign)
+                \     ."\t"
+                \     .a:item.action__path
 
     return a:item
 endfunction
