@@ -54,6 +54,10 @@ endfunction
 
 
 function s:launch_tests(files)
+    if !exists('themis')
+        return vtbox#log#error('themis command cannot be found')
+    endif
+
     let l:results = s:run_tests(
                 \ vtbox#utils#vim#is_list(a:files) ? a:files : [a:files])
     let l:number_of_files = len(l:results)
