@@ -17,7 +17,7 @@ let s:converter = {
     \}
 
 
-function s:converter.filter(candidates, context) abort "{{{
+function s:converter.filter(candidates, context) abort
     let l:width = s:get_max_width(map(a:candidates, 's:clean_text(v:val)'))
 
     if l:width <= g:vtbox_buffer_width
@@ -68,8 +68,6 @@ function s:get_max_width(items)
 
     return l:width
 endfunction
-
-
 
 "---------------------------------------
 let &cpo = s:cpo_save | unlet s:cpo_save
