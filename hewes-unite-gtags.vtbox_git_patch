@@ -1,0 +1,59 @@
+diff --git a/autoload/unite/libs/gtags.vim b/autoload/unite/libs/gtags.vim
+index 9a821c0..b889ec9 100644
+--- a/autoload/unite/libs/gtags.vim
++++ b/autoload/unite/libs/gtags.vim
+@@ -8,6 +8,8 @@ let s:format = {
+       \ "ctags-x" : {},
+       \ }
+ 
++let s:strings = vtbox#vital#lib('Data.String')
++
+ function! s:format["ctags-x"].func(line)
+   let l:items = matchlist(a:line, '\s\+\(\d\+\)\s\+\(.*\.\S\+\)\s\(.*\)$')
+   if empty(l:items)
+@@ -16,7 +18,11 @@ function! s:format["ctags-x"].func(line)
+   else
+     return {
+           \  "kind": "jump_list",
+-          \  "word" : l:items[2] . ' |' . l:items[1] . '| ' . l:items[3],
++          \  "word" : s:strings.truncate_skipping(
++          \                s:strings.trim(l:items[3]),
++          \                g:vtbox_buffer_width + len(g:__vtbox_buffer_shortner_sign), 0, g:__vtbox_buffer_shortner_sign)
++          \           ."\t".l:items[1],
++          \
+           \  "action__path" : l:items[2],
+           \  "action__line" : l:items[1],
+           \  "action__text" : l:items[3],
+@@ -32,7 +38,11 @@ function! s:format["ctags-mod"].func(line)
+   else
+     return {
+           \  "kind": "jump_list",
+-          \  "word" : l:items[1] . ' |' .  l:items[2] . '| ' . l:items[3],
++          \  "word" : s:strings.truncate_skipping(
++          \                s:strings.trim(l:items[3]),
++          \                g:vtbox_buffer_width + len(g:__vtbox_buffer_shortner_sign), 0, g:__vtbox_buffer_shortner_sign)
++          \           ."\t".l:items[1],
++          \
+           \  "action__path" : l:items[1],
+           \  "action__line" : l:items[2],
+           \  "action__text" : l:items[3],
+diff --git a/autoload/unite/sources/gtags.vim b/autoload/unite/sources/gtags.vim
+index 44315db..430b261 100644
+--- a/autoload/unite/sources/gtags.vim
++++ b/autoload/unite/sources/gtags.vim
+@@ -8,7 +8,6 @@ let s:ref = {
+       \ 'description' : 'global with -rs option',
+       \ 'enable_tree_matcher' : 1,
+       \ 'hooks'  : {
+-         \'on_syntax' : function("unite#libs#gtags#on_syntax"),
+          \'on_init'   : function("unite#libs#gtags#on_init_common"),
+          \ },
+       \ 'syntax' : "uniteSource__Gtags",
+@@ -34,7 +33,6 @@ let s:def = {
+       \ 'description' : 'global with -d option',
+       \ 'enable_tree_matcher' : 1,
+       \ 'hooks'  : {
+-         \'on_syntax' : function("unite#libs#gtags#on_syntax"),
+          \'on_init'   : function("unite#libs#gtags#on_init_common"),
+          \ },
+       \ 'syntax' : "uniteSource__Gtags",

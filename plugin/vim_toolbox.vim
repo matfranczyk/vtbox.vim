@@ -1,10 +1,11 @@
-"----------------------------------------------------
+"-----------------------------------
 let s:cpo_save = &cpo | set cpo&vim
-"----------------------------------------------------
+"-----------------------------------
 
-if !exists('g:vtbox_initialized_flag')
-    let g:vtbox_initialized_flag = {}
+if !exists('g:__vtbox_initialized_flag')
+    let g:__vtbox_initialized_flag = {}
 endif
+
 
 command! -nargs=* -complete=customlist,vtbox#find#parser#completion
         \ FindFile :call vtbox#find#parser#execute(<q-args>)
