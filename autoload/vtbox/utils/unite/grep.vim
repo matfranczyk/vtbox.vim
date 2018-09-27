@@ -53,7 +53,7 @@ function s:shorten_candidate(item)
     return {
         \ "word"         : s:strings.truncate_skipping(
         \                       a:item.text,
-        \                       g:__vtbox_buffer_maxline_width, 0, g:__vtbox_buffer_shortner_sign)
+        \                       g:vtbox_buffer_width + len(g:__vtbox_buffer_shortner_sign), 0, g:__vtbox_buffer_shortner_sign)
         \                  ."\t".a:item.file,
         \ "action__path" : a:item.file,
         \ "action__line" : a:item.line,
@@ -75,7 +75,7 @@ endfunction
 function s:gather_candidates(args, context)
     let l:width = s:get_max_width(a:context.items)
 
-    if l:width <= 180
+    if l:width <= g:vtbox_buffer_width
         return map(a:context.items, "s:candidate(v:val, ".l:width.")")
     endif
 

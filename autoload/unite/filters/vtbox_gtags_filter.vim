@@ -20,7 +20,7 @@ let s:converter = {
 function s:converter.filter(candidates, context) abort "{{{
     let l:width = s:get_max_width(map(a:candidates, 's:clean_text(v:val)'))
 
-    if l:width <= 180
+    if l:width <= g:vtbox_buffer_width
         return map(a:candidates, "s:candidate(v:val, ".l:width.")")
     endif
 
@@ -39,7 +39,7 @@ endfunction
 function s:shorten_candidate(item)
     let a:item.word = s:strings.truncate_skipping(
                 \           a:item.word,
-                \           g:__vtbox_buffer_maxline_width, 0, g:__vtbox_buffer_shortner_sign)
+                \           g:vtbox_buffer_width + len(g:__vtbox_buffer_shortner_sign), 0, g:__vtbox_buffer_shortner_sign)
                 \     ."\t"
                 \     .a:item.action__path
 
