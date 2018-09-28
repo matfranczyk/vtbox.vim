@@ -54,7 +54,7 @@ endfunction
 
 
 function s:launch_tests(files)
-    if !exists('themis')
+    if !executable('themis')
         return vtbox#log#error('themis command cannot be found')
     endif
 
