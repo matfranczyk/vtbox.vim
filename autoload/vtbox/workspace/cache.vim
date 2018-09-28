@@ -4,22 +4,22 @@ let s:cpo_save = &cpo | set cpo&vim
 "
 " usr:api
 "
-function vtbox#workspace#manager#cache#local()
+function vtbox#workspace#cache#local()
     if empty(s:_instance_)
         let s:_instance_ = s:factory()
     endif
     return s:_instance_
 endfunction
+let s:_instance_ = {}
 
 
-function vtbox#workspace#manager#cache#dirname()
+function vtbox#workspace#cache#dirname()
     return s:dirname
 endfunction
 
 "
 " ipml
 "
-let s:_instance_ = {}
 let s:dirname = get(g:, 'vimrc_cache_dirname', '.vim.cache')
 
 

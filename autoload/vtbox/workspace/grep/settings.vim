@@ -21,7 +21,7 @@ let s:settings = vtbox#utils#workspace#settings#holder#create(
                     \ [
                     \   function('vtbox#grep#object#new'),
                     \   vtbox#toml#handler#create(
-                    \       vtbox#workspace#manager#api().cache_path()."/grep/settings.toml",
+                    \       vtbox#workspace#manager().cache_path()."/grep/settings.toml",
                     \       function('vtbox#workspace#toml#content#grep')),
                     \   "workspace:grep:config"
                     \ ])

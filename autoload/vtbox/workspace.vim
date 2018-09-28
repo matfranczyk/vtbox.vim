@@ -4,7 +4,7 @@ let s:cpo_save = &cpo | set cpo&vim
 "
 " usr:api
 "
-function vtbox#workspace#manager#api()
+function vtbox#workspace#manager()
     if empty(s:_instance_)
         let s:_instance_ = s:factory()
     endif
@@ -14,12 +14,12 @@ let s:_instance_ = {}
 
 
 function s:factory()
-    if ! vtbox#workspace#manager#cache#local().is_available()
+    if ! vtbox#workspace#cache#local().is_available()
         call vtbox#exception#throw("cannot create workspace#manager if cache local is not available")
     endif
 
     return {
-        \ '_cache'     : vtbox#workspace#manager#cache#local().path()."/workspace",
+        \ '_cache'     : vtbox#workspace#cache#local().path()."/workspace",
         \
         \ 'cache_path' : function('s:cache_path'),
         \ 'configure'  : function('s:configure'),

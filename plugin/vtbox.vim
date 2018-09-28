@@ -29,19 +29,19 @@ command!  -nargs=* -complete=customlist,vtbox#grep#parser#complete
 "
 " bootstrap: workspace
 "
-if vtbox#workspace#manager#cache#local().is_available()
-    call vtbox#workspace#manager#api().configure()
+if vtbox#workspace#cache#local().is_available()
+    call vtbox#workspace#manager().configure()
 else
     command! -nargs=0 WorkspaceCreate :call __Vtbox_create_workspace()
 
     function __Vtbox_create_workspace()
         try
-            call vtbox#workspace#manager#cache#local().create()
+            call vtbox#workspace#cache#local().create()
         catch
             call vtbox#exception#rethrow('cannot create local workspace')
         endtry
 
-        call vtbox#workspace#manager#api().configure()
+        call vtbox#workspace#manager().configure()
         delcommand WorkspaceCreate
     endfunction
 endif
