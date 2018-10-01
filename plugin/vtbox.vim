@@ -1,10 +1,10 @@
 "-----------------------------------
 let s:cpo_save = &cpo | set cpo&vim
 "-----------------------------------
-
-if !exists('g:__vtbox_initialized_flag')
-    let g:__vtbox_initialized_flag = {}
+if exists('g:__vtbox_initialized_flag')
+    finish
 endif
+let g:__vtbox_initialized_flag = 1
 
 "
 " constant::api
