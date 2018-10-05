@@ -55,9 +55,9 @@ endfunction
 
 function s:create() dict
     try
-        call vtbox#utils#filesystem#create_director(self._settings.local)
+        call vtbox#utils#filesystem#ensure_directory(self._settings.local)
     catch
-        call vtbox#utils#filesystem#create_director(self._settings.hybrid)
+        call vtbox#utils#filesystem#ensure_directory(self._settings.hybrid)
     endtry
 
     call self._select_path()

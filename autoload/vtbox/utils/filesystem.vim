@@ -35,14 +35,15 @@ function vtbox#utils#filesystem#dirname(path)
 endfunction
 
 
-function vtbox#utils#filesystem#create_director(path)
+function vtbox#utils#filesystem#ensure_directory(path)
     if !isdirectory(a:path)
         call mkdir(a:path, 'p')
     endif
-
-    return a:path
 endfunction
 
+function vtbox#utils#filesystem#fetch_directory(path)
+    call vtbox#utils#filesystem#ensure_directory(a:path) | return a:path
+endfunction
 
 function vtbox#utils#filesystem#delete(file)
     if isdirectory(a:file)
@@ -61,7 +62,7 @@ function vtbox#utils#filesystem#get_file_content(file)
 endfunction
 
 function! vtbox#utils#filesystem#set_file_content(file, list_of_lines)
-    call vtbox#utils#filesystem#create_director(
+    call vtbox#utils#filesystem#ensure_directory(
         \ vtbox#utils#filesystem#parent_path(a:file))
 
     call s:buffers_lib.open(a:file, {"opener" : "split"})
