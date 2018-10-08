@@ -9,9 +9,10 @@ function vtbox#grep#object#new(data)
         \ "_data"    : vtbox#utils#shell#attributes#unify(a:data),
         \ "_pattern" : "",
         \
-        \ "regex"    : function("s:regex"),
-        \ "fixed"    : function("s:fixed"),
-        \ "icase"    : function("s:icase"),
+        \ "regex"       : function("s:regex"),
+        \ "fixed"       : function("s:fixed"),
+        \ "icase"       : function("s:icase"),
+        \ "exclude_dir" : function("s:exclude_dir"),
         \
         \ "pattern"  : function("s:pattern"),
         \ "commands" : function("s:commands")
@@ -47,6 +48,15 @@ endfunction
 
 function s:set_icase(item)
     let a:item['insensitive'] = 1 | return a:item
+endfunction
+
+
+function s:exclude_dir() dict
+    call map(self._data, 's:set_exclude_dir(v:val)')
+endfunction
+
+function s:set_exclude_dir(item)
+    let a:item['exclude_dir'] = 1 | return a:item
 endfunction
 
 
