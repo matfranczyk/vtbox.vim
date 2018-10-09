@@ -10,6 +10,7 @@ function vtbox#plantuml#parser#create()
     call l:parser.on("--save=VALUE",
                    \ "\t [default] txt format",
                    \ {
+                   \    'default'    : 'txt',
                    \    'completion' : function('s:formats')
                    \ })
 
