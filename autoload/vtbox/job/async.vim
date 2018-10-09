@@ -31,7 +31,7 @@ endfunction
 " obj:api
 "
 function s:launch() dict
-    if self._job.is_initialized()
+    if self._job.has_value()
         call self._job.reset()
     endif
 
@@ -48,7 +48,7 @@ function s:launch() dict
 endfunction
 
 function s:is_running() dict
-    return  self._job.is_initialized()
+    return  self._job.has_value()
        \ && self._job.value().status() == 'run'
 endfunction
 

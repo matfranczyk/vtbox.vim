@@ -49,7 +49,7 @@ endfunction
 
 
 function s:is_available() dict
-    return self._path.is_initialized()
+    return self._path.has_value()
 endfunction
 
 

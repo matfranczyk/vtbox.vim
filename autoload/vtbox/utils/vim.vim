@@ -2,6 +2,50 @@
 let s:cpo_save = &cpo | set cpo&vim
 "----------------------------------
 
+function vtbox#utils#vim#options(dialog_info, options)
+"{{{
+    if type(a:options) == type([])
+        return s:dialog_with_list_of_options(a:dialog_info, a:options)
+    endif
+
+    return s:dialog_with_map_of_options(a:dialog_info, a:options)
+endfunction
+
+
+function s:dialog_with_list_of_options(dialog_info, list_of_options)
+    let l:options = []
+
+    let l:i = 1
+    for item in a:list_of_options
+        call add(l:options, l:i.'. '.item) | let l:i += 1
+    endfor
+
+    while 1
+		let l:answer = inputlist([a:dialog_info] + l:options)
+		if l:answer >= 1 && l:answer <= len(a:list_of_options)
+            return a:list_of_options[l:answer - 1]
+        endif
+    endwhile
+endfunction
+
+function! s:dialog_with_map_of_options(text, options_map)
+    let l:options = []
+    let l:keys = keys(a:options_map)
+
+    let l:i = 1
+    for item in l:keys
+        call add(l:options, l:i.'. '.item) | let l:i += 1
+    endfor
+
+    while 1
+        let l:answer = inputlist([a:text] + l:options)
+        if l:answer >= 1 && l:answer <= len(l:keys)
+            return a:options_map[l:keys[l:answer - 1]]
+        endif
+    endwhile
+endfunction
+"}}}
+
 function vtbox#utils#vim#is_list(arg)
     return type(a:arg) == type([])
 endfunction

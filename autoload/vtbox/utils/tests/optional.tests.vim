@@ -15,13 +15,13 @@ call themis#helper('command').with(s:assert)
 
 
     function! s:suite.shall_be_empty_after_createion()
-        call s:assert.false(s:sut.is_initialized())
+        call s:assert.false(s:sut.has_value())
     endfunction
 
 
     function! s:suite.shoul_be_initialized_if_value_was_set()
         call s:sut.value(1)
-        call s:assert.true(s:sut.is_initialized())
+        call s:assert.true(s:sut.has_value())
     endfunction
 
 
@@ -41,7 +41,7 @@ call themis#helper('command').with(s:assert)
     function! s:suite.reset_value()
         call s:sut.value(1) | call s:sut.reset()
 
-        call s:assert.false(s:sut.is_initialized())
+        call s:assert.false(s:sut.has_value())
     endfunction
 
 
@@ -61,7 +61,7 @@ call themis#helper('command').with(s:assert)
         call s:assert.equals([1, 2], l:sut.value())
 
         call l:sut.reset()
-        call s:assert.false(s:sut.is_initialized())
+        call s:assert.false(s:sut.has_value())
     endfunction
 
 

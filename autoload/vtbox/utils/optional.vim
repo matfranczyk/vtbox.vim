@@ -6,9 +6,9 @@ function vtbox#utils#optional#create(name, ...)
     let l:obj = {
         \ "__name"  : a:name,
         \
-        \ "is_initialized" : function("s:is_initialized"),
-        \ "reset"          : function("s:reset"),
-        \ "value"          : function("s:value"),
+        \ "has_value" : function("s:has_value"),
+        \ "reset"     : function("s:reset"),
+        \ "value"     : function("s:value"),
         \ }
 
     if !empty(a:000)
@@ -19,13 +19,13 @@ function vtbox#utils#optional#create(name, ...)
 endfunction
 
 
-function s:is_initialized() dict
+function s:has_value() dict
     return has_key(self, "__value")
 endfunction
 
 
 function s:reset() dict
-    if self.is_initialized()
+    if self.has_value()
         unlet self.__value
     endif
 endfunction
@@ -34,7 +34,7 @@ endfunction
 function s:value(...) dict
     if !empty(a:000) | let self.__value = deepcopy(a:1) | return | endif
 
-    if self.is_initialized()
+    if self.has_value()
         return self.__value
     endif
 
