@@ -26,16 +26,35 @@ endfunction
 " impl
 "
 function s:process(input)
-    echomsg "done: ".string(a:input)
+    let l:file = expand('%:p')
+
+    if has_key(a:input, 'check_syntax')
+        return vtbox#plantuml#check_syntax(l:file)
+    endif
+
+    if has_key(a:input, 'save')
+        return vtbox#plantuml#save_file(l:file, s:format(a:input.save))
+    endif
 endfunction
 
 
 function s:is_input_valid(parsed)
     call s:logger.clear()
 
-    " ifs
+    if empty(a:parsed)
+        call s:logger.append('[!] lack of parameters')
+    endif
 
     return s:logger.empty()
+endfunction
+
+
+function s:format(format)
+    if a:format == 'txt'
+        return 'utxt'
+    else
+        return 't'.a:format
+    endif
 endfunction
 
 

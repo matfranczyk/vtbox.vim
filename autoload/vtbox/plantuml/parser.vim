@@ -10,20 +10,18 @@ function vtbox#plantuml#parser#create()
     call l:parser.on("--save=VALUE",
                    \ "\t [default] txt format",
                    \ {
-                   \    'default'    : 'utxt',
                    \    'completion' : function('s:formats')
                    \ })
 
-    call l:parser.on("--show",
-                   \ "\t [optional] will show txt format of current UML",
-                   \)
+    call l:parser.on("--check_syntax",
+                   \ "\t {optional} check syntax")
 
     return l:parser
 endfunction
 
 
 function s:formats(...)
-    return ['utxt', 'tsvg', 'tpng', 'tpdf']
+    return ['txt', 'svg', 'png']
 endfunction
 
 "---------------------------------------
