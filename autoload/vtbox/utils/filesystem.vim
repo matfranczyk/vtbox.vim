@@ -10,6 +10,12 @@ function vtbox#utils#filesystem#current_filename()
     return expand("%:t")
 endfunction
 
+
+function vtbox#utils#filesystem#fileroot(file)
+    return fnamemodify(a:file, ":r")
+endfunction
+
+
 function vtbox#utils#filesystem#full_path(filename_or_path)
     return fnamemodify(a:filename_or_path, ":p")
 endfunction
