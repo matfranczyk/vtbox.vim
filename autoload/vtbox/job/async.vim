@@ -5,17 +5,11 @@ let s:cpo_save = &cpo | set cpo&vim
 " impl::api
 "
 function vtbox#job#async#create(command, properties)
-    return s:job_factory(a:command, a:properties)
-endfunction
-
-"
-" impl
-"
-function s:job_factory(command, properties)
     return {
-        \ "_job"     : vtbox#utils#optional#create("job id"),
-        \ '_command' : {},
-        \ "_context" : vtbox#job#async#context#create(a:command, a:properties),
+        \ "_job" : vtbox#utils#optional#create("job::id"),
+        \
+        \ '_command'    : a:command,
+        \ '_properties' : a:properties,
         \
         \ "launch"     : function('s:launch'),
         \ "is_running" : function("s:is_running"),
@@ -23,15 +17,16 @@ function s:job_factory(command, properties)
         \ }
 endfunction
 
-
 "
 " obj:api
 "
-function s:launch() dict
+function s:launch(...) dict
+    try
         call self._job.value(
                 \ vtbox#vital#lib("System.Job").start(
-                \       self._context.command(),
-                \       self._context))
+                \       split(self.command()),
+                \       vtbox#job#async#context#create(self._properties))
+                \)
     catch
         call self._job.reset()
         call vtbox#exception#log('async:job failed')

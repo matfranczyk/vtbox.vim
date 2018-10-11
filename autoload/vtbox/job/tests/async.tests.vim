@@ -28,8 +28,6 @@ endfunction
         call s:assert.is_function(s:job.launch)
         call s:assert.is_function(s:job.is_running)
         call s:assert.is_function(s:job.command)
-        call s:assert.is_function(s:job.copy_stdout)
-        call s:assert.is_function(s:job.copy_stderr)
     endfunction
 
 
@@ -44,10 +42,6 @@ endfunction
 
     function s:suite.checking_if_jobs_still_running()
         call s:job.launch()
-
-        while s:job.is_running() | endwhile
-
-        call s:assert.true(1)
     endfunction
 
 "---------------------------------------

@@ -52,7 +52,7 @@ let s:suite = themis#suite("AttributesCreationTs")
 let s:suite = themis#suite("CreateHandlersTs")
 
     function s:suite.default()
-        let l:handlers = s:impl_script.create_handlers()
+        let l:handlers = s:impl_script.create_framework()
 
         call s:assert.is_function(l:handlers.on_stdout)
         call s:assert.is_function(l:handlers.on_stderr)
@@ -66,7 +66,7 @@ let s:suite = themis#suite("CreateHandlersTs")
 let s:suite = themis#suite("CreateContextDataTs")
 
     function s:suite.default()
-        let l:data = s:impl_script.create_data()
+        let l:data = s:impl_script.create_framework()
 
         call s:assert.equals([''], l:data.stdout)
         call s:assert.equals([''], l:data.stderr)

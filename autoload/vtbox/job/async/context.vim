@@ -6,8 +6,7 @@ let s:cpo_save = &cpo | set cpo&vim
 "
 function vtbox#job#async#context#create(properties)
     return extend(s:create_attributes(a:properties),
-                \ s:create_handlers(),
-                \ {'data' : s:create_data()},
+                \ s:create_framework()
                 \ )
 endfunction
 
@@ -24,53 +23,60 @@ function s:create_attributes(user)
         \ }
 endfunction
 
-function s:create_handlers()
-    return {
-        \ "on_stdout"  : function('s:on_stdout'),
-        \ "on_stderr"  : function('s:on_stderr'),
-        \ "on_exit"    : function('s:on_exit'),
-        \ }
-endfunction
-
-function s:create_data()
+function s:create_framework()
     return {
         \ 'stdout': [''], 'stderr': [''],
         \ 'exit_status' : vtbox#utils#optional#create('job:exit_status'),
         \ "time_start"  : vtbox#utils#optional#create('job:time_start', vtbox#utils#vim#watch_time()),
         \ "time_stop"   : vtbox#utils#optional#create('job:time_stop'),
+        \
+        \ "on_stdout"  : function('s:on_stdout'),
+        \ "on_stderr"  : function('s:on_stderr'),
+        \ "on_exit"    : function('s:on_exit'),
+        \
+        \ 'copy_state' : function('s:copy_state')
         \ }
 endfunction
 
-function s:create_api() dict
+function s:copy_state() dict
     return {
-         \ }
+        \ 'exit_status' : self.exit_status.value(),
+        \
+        \ 'times' : {
+        \       'start' : self.time_start.value(),
+        \       'stop' : self.time_stop.value()
+        \ }
+        \
+        \ 'stdout' : copy(self.stdout),
+        \ 'stderr' : copy(self.stderr),
+        \ }
 endfunction
 
 "
 " impl::event handlers
 "
-function s:on_exit(exit_value) abort dict
-    call self.data.exit_value.value(a:exit_value)
-    call self.data.time_stop.value(vtbox#utils#vim#watch_time())
+function s:on_exit(exit_status) abort dict
+    call self.exit_status.value(a:exit_status)
+    call self.time_stop.value(vtbox#utils#vim#watch_time())
 
-    if has_key(self, "stdout_file")
+    if has_key(self, "stdout_file") && !empty(self.stdout_file)
         silent call vtbox#utils#filesystem#set_file_content(
                     \ self.stdout_file,
-                    \ self.data.stdout)
+                    \ self.stdout)
     endif
 
-    if has_key(self, "stderr_file")
+    if has_key(self, "stderr_file") && !empty(self.stderr_file)
         silent call vtbox#utils#filesystem#set_file_content(
                     \ self.stderr_file,
-                    \ self.data.stderr)
+                    \ self.stderr)
     endif
 
-    if has_key(self, "on_done_job")
-        return self.on_done_job.launch(deepcopy(self.data))
+    if has_key(self, "on_done_job") && !empty(self.on_done_job)
+        return self.on_done_job.launch(self.copy_state())
     endif
 
-    if has_key(self, "on_done_function")
-        return self.on_done_function.launch(deepcopy(self.data))
+    if has_key(self, "on_done_function") && !empty(self.on_done_function)
+        return self.on_done_function.launch(self.copy_state())
     endif
 
     echomsg "done"
@@ -85,11 +91,11 @@ function s:_append_output(buffer, output_data)
 endfunction
 
 function s:on_stdout(input) abort dict
-    call s:_append_output(self.data.stdout, a:input)
+    call s:_append_output(self.stdout, a:input)
 endfunction
 
 function s:on_stderr(input) abort dict
-    call s:_append_output(self.data.stderr, a:input)
+    call s:_append_output(self.stderr, a:input)
 endfunction
 
 
