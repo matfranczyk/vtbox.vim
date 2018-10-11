@@ -4,8 +4,8 @@ let s:cpo_save = &cpo | set cpo&vim
 "
 " impl::api
 "
-function vtbox#job#async#context#create(properties)
-    return extend(s:create_attributes(a:properties),
+function vtbox#job#async#context#create(command, properties)
+    return extend(s:create_attributes(a:command, a:properties),
                 \ s:create_framework()
                 \ )
 endfunction
@@ -13,13 +13,15 @@ endfunction
 "
 " impl
 "
-function s:create_attributes(user)
+function s:create_attributes(command, properties)
     return {
-        \ 'stdout_file' : has_key(a:user, 'stdout_file') ? a:user.stdout_file : {},
-        \ 'stderr_file' : has_key(a:user, 'stderr_file') ? a:user.stderr_file : {},
+        \ 'command' : a:command,
         \
-        \ 'on_done_function' : has_key(a:user, 'on_done_function') ? a:user.on_done_function : {},
-        \ 'on_done_job'      : has_key(a:user, 'on_done_job')      ? a:user.on_done_job : {},
+        \ 'stdout_file' : has_key(a:properties, 'stdout_file') ? a:properties.stdout_file : {},
+        \ 'stderr_file' : has_key(a:properties, 'stderr_file') ? a:properties.stderr_file : {},
+        \
+        \ 'on_done_function' : has_key(a:properties, 'on_done_function') ? a:properties.on_done_function : {},
+        \ 'on_done_job'      : has_key(a:properties, 'on_done_job')      ? a:properties.on_done_job : {},
         \ }
 endfunction
 
@@ -34,8 +36,20 @@ function s:create_framework()
         \ "on_stderr"  : function('s:on_stderr'),
         \ "on_exit"    : function('s:on_exit'),
         \
-        \ 'copy_state' : function('s:copy_state')
+        \ 'default_finalizer' : function('s:default_finalizer'),
+        \ 'copy_state'        : function('s:copy_state')
         \ }
+endfunction
+
+function s:default_finalizer() dict
+    if self.exit_status.value() == 0
+        return vtbox#log#message("job done: ".self.command)
+    endif
+
+    call vtbox#utils#vim#make_qflist(self.stderr)
+    call vtbox#utils#unite#copen()
+
+    call vtbox#log#error("job failed: ".self.command)
 endfunction
 
 function s:copy_state() dict
@@ -45,7 +59,7 @@ function s:copy_state() dict
         \ 'times' : {
         \       'start' : self.time_start.value(),
         \       'stop' : self.time_stop.value()
-        \ }
+        \ },
         \
         \ 'stdout' : copy(self.stdout),
         \ 'stderr' : copy(self.stderr),
@@ -76,10 +90,10 @@ function s:on_exit(exit_status) abort dict
     endif
 
     if has_key(self, "on_done_function") && !empty(self.on_done_function)
-        return self.on_done_function.launch(self.copy_state())
+        return self.on_done_function(self.copy_state())
     endif
 
-    echomsg "done"
+    call self.default_finalizer()
 endfunction
 
 

@@ -4,12 +4,12 @@ let s:cpo_save = &cpo | set cpo&vim
 "
 " impl::api
 "
-function vtbox#job#async#create(command, properties)
+function vtbox#job#async#create(command, ...)
     return {
         \ "_job" : vtbox#utils#optional#create("job::id"),
         \
         \ '_command'    : a:command,
-        \ '_properties' : a:properties,
+        \ '_properties' : empty(a:000) ? {} : a:1,
         \
         \ "launch"     : function('s:launch'),
         \ "is_running" : function("s:is_running"),
@@ -25,7 +25,7 @@ function s:launch(...) dict
         call self._job.value(
                 \ vtbox#vital#lib("System.Job").start(
                 \       split(self.command()),
-                \       vtbox#job#async#context#create(self._properties))
+                \       vtbox#job#async#context#create(self._command, self._properties))
                 \)
     catch
         call self._job.reset()
