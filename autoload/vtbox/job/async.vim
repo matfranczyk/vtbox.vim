@@ -14,15 +14,12 @@ endfunction
 function s:job_factory(command, properties)
     return {
         \ "_job"     : vtbox#utils#optional#create("job id"),
+        \ '_command' : {},
         \ "_context" : vtbox#job#async#context#create(a:command, a:properties),
         \
         \ "launch"     : function('s:launch'),
         \ "is_running" : function("s:is_running"),
-        \
-        \ "command"     : function('s:command'),
-        \
-        \ "copy_stdout" : function('s:copy_stdout'),
-        \ "copy_stderr" : function('s:copy_stderr'),
+        \ "command"    : function('s:command'),
         \ }
 endfunction
 
@@ -31,12 +28,6 @@ endfunction
 " obj:api
 "
 function s:launch() dict
-    if self._job.has_value()
-        call self._job.reset()
-    endif
-
-    try
-        call self._context.reset()
         call self._job.value(
                 \ vtbox#vital#lib("System.Job").start(
                 \       self._context.command(),
@@ -54,19 +45,10 @@ endfunction
 
 
 function s:command(...) dict
-    if empty(a:000) | return join(self._context.command()) | endif
-
-    call self._context.command(a:1)
+    if empty(a:000) | return self._command | endif
+    let self._command = a:1
 endfunction
 
-
-function s:copy_stdout() dict
-    return copy(self._context._stdout)
-endfunction
-
-function s:copy_stderr() dict
-    return copy(self._context._stderr)
-endfunction
 
 "---------------------------------------
 let &cpo = s:cpo_save | unlet s:cpo_save
