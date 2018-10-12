@@ -24,7 +24,7 @@ function s:launch(...) dict
     try
         call self._job.value(
                 \ vtbox#vital#lib("System.Job").start(
-                \       split(self.command()),
+                \       ['/bin/bash', '-c', self.command()],
                 \       vtbox#job#async#context#create(self._command, self._properties))
                 \)
     catch
