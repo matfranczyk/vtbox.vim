@@ -40,6 +40,11 @@ endfunction
     endfunction
 
 
+    function s:suite.command_will_throw_if_not_set()
+        Throws vtbox#job#async#create().command()
+    endfunction
+
+
     function s:suite.checking_if_jobs_still_running()
         call s:job.launch()
     endfunction

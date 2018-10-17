@@ -17,9 +17,6 @@ function s:create_attributes(command, properties)
     return {
         \ 'command' : a:command,
         \
-        \ 'stdout_file' : has_key(a:properties, 'stdout_file') ? a:properties.stdout_file : {},
-        \ 'stderr_file' : has_key(a:properties, 'stderr_file') ? a:properties.stderr_file : {},
-        \
         \ 'on_done_function' : has_key(a:properties, 'on_done_function') ? a:properties.on_done_function : {},
         \ 'on_done_job'      : has_key(a:properties, 'on_done_job')      ? a:properties.on_done_job : {},
         \ }
@@ -37,9 +34,10 @@ function s:create_framework()
         \ "on_exit"    : function('s:on_exit'),
         \
         \ 'default_finalizer' : function('s:default_finalizer'),
-        \ 'copy_state'        : function('s:copy_state')
+        \ 'summary' : function('s:summary')
         \ }
 endfunction
+
 
 function s:default_finalizer() dict
     if self.exit_status.value() == 0
@@ -52,17 +50,13 @@ function s:default_finalizer() dict
     call vtbox#log#error("job failed: ".self.command)
 endfunction
 
-function s:copy_state() dict
+
+function s:summary() dict
     return {
         \ 'exit_status' : self.exit_status.value(),
         \
-        \ 'times' : {
-        \       'start' : self.time_start.value(),
-        \       'stop' : self.time_stop.value()
-        \ },
-        \
-        \ 'stdout' : copy(self.stdout),
-        \ 'stderr' : copy(self.stderr),
+        \ 'time_start' : self.time_start.value(),
+        \ 'time_stop'  : self.time_stop.value(),
         \ }
 endfunction
 
@@ -73,24 +67,14 @@ function s:on_exit(exit_status) abort dict
     call self.exit_status.value(a:exit_status)
     call self.time_stop.value(vtbox#utils#vim#watch_time())
 
-    if has_key(self, "stdout_file") && !empty(self.stdout_file)
-        silent call vtbox#utils#filesystem#set_file_content(
-                    \ self.stdout_file,
-                    \ self.stdout)
-    endif
-
-    if has_key(self, "stderr_file") && !empty(self.stderr_file)
-        silent call vtbox#utils#filesystem#set_file_content(
-                    \ self.stderr_file,
-                    \ self.stderr)
-    endif
-
     if has_key(self, "on_done_job") && !empty(self.on_done_job)
-        return self.on_done_job.launch(self.copy_state())
+        return self.on_done_job.launch(
+                    \self.summary(), self.stdout, self.stderr)
     endif
 
     if has_key(self, "on_done_function") && !empty(self.on_done_function)
-        return self.on_done_function(self.copy_state())
+        return self.on_done_function(
+                    \ self.summary(), self.stdout, self.stderr)
     endif
 
     call self.default_finalizer()

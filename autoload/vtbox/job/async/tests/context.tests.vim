@@ -16,7 +16,7 @@ call themis#helper('command').with(s:assert)
 let s:suite = themis#suite("ApiTs")
 
     function s:suite.api()
-        call s:assert.is_dictionary(vtbox#job#async#context#create({}))
+        call s:assert.is_dictionary(vtbox#job#async#context#create("cmd", {}))
     endfunction
 
 "
@@ -25,25 +25,38 @@ let s:suite = themis#suite("ApiTs")
 let s:suite = themis#suite("AttributesCreationTs")
 
     function s:suite.empty()
+        let l:properties = {}
+        let l:cmd = "empty cmd"
+
         call s:assert.equals(
-                    \ s:impl_script.create_attributes({}),
+                    \ s:impl_script.create_attributes(l:cmd, l:properties),
                     \ {
-                    \   'stdout_file': {},
+                    \   'command': l:cmd,
                     \   'on_done_function': {},
-                    \   'on_done_job': {},
-                    \   'stderr_file': {}}
+                    \   'on_done_job'     : {},
+                    \}
                     \ )
     endfunction
 
     function s:suite.attributes_creation()
+        let l:cmd = "empty cmd"
+
+        let l:on_done_job = 'item_1'
+        let l:on_done_fct = 'item_2'
+
         call s:assert.equals(
-                    \ s:impl_script.create_attributes({'stdout_file' : 'file'}),
+                    \ s:impl_script.create_attributes(
+                    \   l:cmd,
+                    \   {
+                    \       'on_done_function' : l:on_done_fct,
+                    \       'on_done_job'      : l:on_done_job
+                    \   }),
                     \ {
-                    \   'stdout_file': 'file',
-                    \   'on_done_function': {},
-                    \   'on_done_job': {},
-                    \   'stderr_file': {}}
-                    \ )
+                    \   'command': l:cmd,
+                    \   'on_done_function' : l:on_done_fct,
+                    \   'on_done_job'      : l:on_done_job
+                    \ }
+                    \)
     endfunction
 
 "
