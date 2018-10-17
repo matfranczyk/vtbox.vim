@@ -33,7 +33,7 @@ function s:process(input)
     endif
 
     if has_key(a:input, 'save')
-        return vtbox#plantuml#save_file(l:file, s:format(a:input.save))
+        return vtbox#plantuml#save#file(l:file, s:format(a:input.save))
     endif
 endfunction
 
