@@ -29,7 +29,7 @@ function s:process(input)
     let l:file = expand('%:p')
 
     if has_key(a:input, 'check_syntax')
-        return vtbox#plantuml#check_syntax(l:file)
+        return vtbox#plantuml#compile#file(l:file)
     endif
 
     if has_key(a:input, 'save')
