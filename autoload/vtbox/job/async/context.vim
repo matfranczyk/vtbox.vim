@@ -18,29 +18,29 @@ function s:create_attributes(command, properties)
         \ 'command' : a:command,
         \
         \ 'on_done_function' : has_key(a:properties, 'on_done_function') ? a:properties.on_done_function : {},
-        \ 'on_done_job'      : has_key(a:properties, 'on_done_job')      ? a:properties.on_done_job : {},
         \ }
 endfunction
 
 function s:create_framework()
     return {
-        \ 'stdout': [''], 'stderr': [''],
-        \ 'exit_status' : vtbox#utils#optional#create('job:exit_status'),
-        \ "time_start"  : vtbox#utils#optional#create('job:time_start', vtbox#utils#vim#watch_time()),
-        \ "time_stop"   : vtbox#utils#optional#create('job:time_stop'),
+        \ 'stdout': [''],
+        \ 'stderr': [''],
+        \
+        \ 'exit_status' : -1,
+        \ "time_start"  : vtbox#utils#vim#watch_time(),
+        \ "time_stop"   : -1,
         \
         \ "on_stdout"  : function('s:on_stdout'),
         \ "on_stderr"  : function('s:on_stderr'),
         \ "on_exit"    : function('s:on_exit'),
         \
         \ 'default_finalizer' : function('s:default_finalizer'),
-        \ 'summary' : function('s:summary')
         \ }
 endfunction
 
 
 function s:default_finalizer() dict
-    if self.exit_status.value() == 0
+    if self.exit_status == 0
         return vtbox#log#message("job done: ".self.command)
     endif
 
@@ -51,30 +51,17 @@ function s:default_finalizer() dict
 endfunction
 
 
-function s:summary() dict
-    return {
-        \ 'exit_status' : self.exit_status.value(),
-        \
-        \ 'time_start' : self.time_start.value(),
-        \ 'time_stop'  : self.time_stop.value(),
-        \ }
-endfunction
-
 "
 " impl::event handlers
 "
 function s:on_exit(exit_status) abort dict
-    call self.exit_status.value(a:exit_status)
-    call self.time_stop.value(vtbox#utils#vim#watch_time())
 
-    if has_key(self, "on_done_job") && !empty(self.on_done_job)
-        return self.on_done_job.launch(
-                    \self.summary(), self.stdout, self.stderr)
-    endif
+    let self.exit_status = a:exit_status
+    let self.time_stop = vtbox#utils#vim#watch_time()
 
     if has_key(self, "on_done_function") && !empty(self.on_done_function)
         return self.on_done_function(
-                    \ self.summary(), self.stdout, self.stderr)
+                    \ self.exit_status, self.stdout, self.stderr, self.time_start, self.time_stop)
     endif
 
     call self.default_finalizer()

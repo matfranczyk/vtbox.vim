@@ -33,7 +33,7 @@ endfunction
 function s:launch(...) dict
     try
         let l:command = self.command()
-        let l:properties = empty(a:000) ? {}, : a:1
+        let l:properties = empty(a:000) ? {} : a:1
 
         call self._job.value(
                 \ vtbox#vital#lib("System.Job").start(

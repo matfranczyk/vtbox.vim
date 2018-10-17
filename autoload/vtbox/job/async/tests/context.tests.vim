@@ -8,6 +8,8 @@ let s:impl_script = themis#helper('scope').funcs(s:impl_file)
 let s:impl_vars   = themis#helper('scope').vars(s:impl_file)
 
 let s:assert = themis#helper('assert')
+let s:expect = themis#helper('expect')
+
 call themis#helper('command').with(s:assert)
 
 "
@@ -33,7 +35,6 @@ let s:suite = themis#suite("AttributesCreationTs")
                     \ {
                     \   'command': l:cmd,
                     \   'on_done_function': {},
-                    \   'on_done_job'     : {},
                     \}
                     \ )
     endfunction
@@ -41,7 +42,6 @@ let s:suite = themis#suite("AttributesCreationTs")
     function s:suite.attributes_creation()
         let l:cmd = "empty cmd"
 
-        let l:on_done_job = 'item_1'
         let l:on_done_fct = 'item_2'
 
         call s:assert.equals(
@@ -49,12 +49,10 @@ let s:suite = themis#suite("AttributesCreationTs")
                     \   l:cmd,
                     \   {
                     \       'on_done_function' : l:on_done_fct,
-                    \       'on_done_job'      : l:on_done_job
                     \   }),
                     \ {
                     \   'command': l:cmd,
                     \   'on_done_function' : l:on_done_fct,
-                    \   'on_done_job'      : l:on_done_job
                     \ }
                     \)
     endfunction
@@ -84,10 +82,10 @@ let s:suite = themis#suite("CreateContextDataTs")
         call s:assert.equals([''], l:data.stdout)
         call s:assert.equals([''], l:data.stderr)
 
-        call s:assert.false(l:data.exit_status.has_value())
+        call s:assert.equals(l:data.exit_status, -1)
 
-        call s:assert.true(l:data.time_start.has_value())
-        call s:assert.false(l:data.time_stop.has_value())
+        call s:expect(l:data.time_start).to_be_greater_than(0)
+        call s:assert.equals(l:data.time_stop, -1)
     endfunction
 
 "---------------------------------------
