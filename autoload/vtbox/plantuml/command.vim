@@ -26,18 +26,20 @@ endfunction
 " impl
 "
 function s:process(input)
-    let l:file = expand('%:p')
-
     if has_key(a:input, 'check_syntax')
-        return vtbox#plantuml#compile#file(l:file)
+        return vtbox#plantuml#compile#file(
+                    \ vtbox#utils#filesystem#current_file())
     endif
 
     if has_key(a:input, 'save')
-        return vtbox#plantuml#save#file(l:file, a:input.save)
+        return vtbox#plantuml#save#file(
+                    \ vtbox#utils#filesystem#current_file(),
+                    \ a:input.save)
     endif
 
     if has_key(a:input, 'view')
-        return vtbox#plantuml#view#file(l:file)
+        return vtbox#plantuml#view#file(
+                    \vtbox#utils#filesystem#current_file())
     endif
 endfunction
 
@@ -45,8 +47,10 @@ endfunction
 function s:is_input_valid(parsed)
     call s:logger.clear()
 
-    if empty(a:parsed)
-        call s:logger.append('[!] lack of parameters')
+    if !has_key(a:parsed, 'check_syntax') &&
+     \ !has_key(a:parsed, 'save')         &&
+     \ !has_key(a:parsed, 'view')
+        call s:logger.append('[!] you need to provide one of {check_syntax, save, view} parameters')
     endif
 
     return s:logger.empty()
