@@ -10,12 +10,14 @@ function vtbox#plantuml#parser#create()
     call l:parser.on("--save=VALUE",
                    \ "\t [default] txt format",
                    \ {
-                   \    'default'    : 'txt',
                    \    'completion' : function('s:formats')
                    \ })
 
     call l:parser.on("--check_syntax",
                    \ "\t {optional} check syntax")
+
+    call l:parser.on("--view",
+                   \ "\t {optional} produce {file}.utxt + vsplit this file")
 
     return l:parser
 endfunction

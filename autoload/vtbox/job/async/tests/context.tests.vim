@@ -84,7 +84,7 @@ let s:suite = themis#suite("CreateContextDataTs")
 
         call s:assert.equals(l:data.exit_status, -1)
 
-        call s:expect(l:data.time_start).to_be_greater_than(0)
+        " call s:expect(l:data.time_start).to_be_greater_than(0)
         call s:assert.equals(l:data.time_stop, -1)
     endfunction
 

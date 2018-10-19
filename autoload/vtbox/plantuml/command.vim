@@ -33,7 +33,11 @@ function s:process(input)
     endif
 
     if has_key(a:input, 'save')
-        return vtbox#plantuml#save#file(l:file, s:format(a:input.save))
+        return vtbox#plantuml#save#file(l:file, a:input.save)
+    endif
+
+    if has_key(a:input, 'view')
+        return vtbox#plantuml#view#file(l:file)
     endif
 endfunction
 
@@ -46,15 +50,6 @@ function s:is_input_valid(parsed)
     endif
 
     return s:logger.empty()
-endfunction
-
-
-function s:format(format)
-    if a:format == 'txt'
-        return 'utxt'
-    else
-        return 't'.a:format
-    endif
 endfunction
 
 
