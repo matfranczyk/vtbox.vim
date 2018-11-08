@@ -15,16 +15,7 @@ endfunction
 
 
 function vtbox#vimfiler#get_items()
-    let l:marked = vimfiler#get_marked_files(a:vimfiler_instance)
-    if !empty(l:marked)
-        return map(l:marked, 's:extract_file(v:val)')
-    endif
-
-    try
-        return [ vimfiler#get_file(a:vimfiler_instance, line('.')).action__path ]
-    catch
-        call vtbox#exception#throw('not action__path existed')
-    endtry
+    return s:get_items(b:vimfiler)
 endfunction
 
 
@@ -53,8 +44,17 @@ function s:single_item(vimfiler_instance) abort
 endfunction
 
 
-function s:extract_file(vimfiler_file_info)
-    return a:vimfiler_file_info.action__path
+function s:get_items(vimfiler_instance) abort
+    let l:marked = vimfiler#get_marked_files(a:vimfiler_instance)
+    if !empty(l:marked)
+        return map(l:marked, 'v:val.action__path')
+    endif
+
+    try
+        return [ vimfiler#get_file(a:vimfiler_instance, line('.')).action__path ]
+    catch
+        call vtbox#exception#throw('not action__path existed')
+    endtry
 endfunction
 
 "---------------------------------------
