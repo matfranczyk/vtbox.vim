@@ -4,8 +4,8 @@ let s:cpo_save = &cpo | set cpo&vim
 "
 " impl::api
 "
-function vtbox#vimfiler#single_file()
-    let l:item = s:single_item(b:vimfiler)
+function vtbox#vimfiler#single_file(vimfiler_instance)
+    let l:item = s:single_item(a:vimfiler_instance)
     if filereadable(l:item)
         return l:item
     endif
@@ -14,13 +14,22 @@ function vtbox#vimfiler#single_file()
 endfunction
 
 
-function vtbox#vimfiler#get_items()
-    return s:get_items(b:vimfiler)
+function vtbox#vimfiler#get_items(vimfiler_instance)
+    let l:marked = vimfiler#get_marked_files(a:vimfiler_instance)
+    if !empty(l:marked)
+        return map(l:marked, 'v:val.action__path')
+    endif
+
+    try
+        return [ vimfiler#get_file(a:vimfiler_instance, line('.')).action__path ]
+    catch
+        call vtbox#exception#throw('not action__path existed')
+    endtry
 endfunction
 
 
-function vtbox#vimfiler#close_buffer()
-    call vimfiler#util#delete_buffer(b:vimfiler.bufnr)
+function vtbox#vimfiler#close_buffer(vimfiler_instance)
+    call vimfiler#util#delete_buffer(a:vimfiler_instance.bufnr)
 endfunction
 
 "
@@ -38,20 +47,6 @@ function s:single_item(vimfiler_instance) abort
 
     try
         return vimfiler#get_file(a:vimfiler_instance, line('.')).action__path
-    catch
-        call vtbox#exception#throw('not action__path existed')
-    endtry
-endfunction
-
-
-function s:get_items(vimfiler_instance) abort
-    let l:marked = vimfiler#get_marked_files(a:vimfiler_instance)
-    if !empty(l:marked)
-        return map(l:marked, 'v:val.action__path')
-    endif
-
-    try
-        return [ vimfiler#get_file(a:vimfiler_instance, line('.')).action__path ]
     catch
         call vtbox#exception#throw('not action__path existed')
     endtry
