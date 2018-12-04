@@ -74,7 +74,7 @@ function! vtbox#utils#filesystem#set_file_content(file, list_of_lines)
     call s:buffers_lib.open(a:file, {"opener" : "split"})
     call s:buffers_lib.edit_content(a:list_of_lines)
 
-    silent write | silent bdelete
+    silent write | silent bdelete | filetype detect
 endfunction
 
 
