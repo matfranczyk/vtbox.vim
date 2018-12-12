@@ -10,7 +10,6 @@ function vtbox#job#async#create(...)
     endif
 
     return extend(s:factory(), {'_command' : vtbox#utils#optional#create('job:command', a:1)} )
-
 endfunction
 
 "
@@ -29,6 +28,16 @@ endfunction
 
 "
 " obj:api
+"
+"   {empty} -> default vtbox#job#async#context :: s:default_finalizer()
+"
+"   job.launch({on_done_function : function('on_done_function')})
+"       ----> arguments forwarded to 'on_done_function'
+"           (1) exit_status,
+"           (3) stdout,
+"           (4) stderr,
+"           (5) time_start,
+"           (6) time_stop
 "
 function s:launch(...) dict
     try

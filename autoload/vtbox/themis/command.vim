@@ -65,7 +65,7 @@ function s:launch_tests(files)
     call filter(l:results, 'v:val.exit_code != 0')
 
     if !empty(l:results)
-        call vtbox#utils#vim#make_qflist(s:create_failed_report(l:results))
+        call vtbox#utils#vim#populate_qflist(s:create_failed_report(l:results))
         return vtbox#utils#unite#copen()
     endif
 

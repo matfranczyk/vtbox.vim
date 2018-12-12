@@ -44,12 +44,21 @@ function s:default_finalizer() dict
         return vtbox#log#message("job done: ".self.command)
     endif
 
-    call vtbox#utils#vim#make_qflist(self.stderr)
-    call vtbox#utils#unite#copen()
+    call vtbox#utils#vim#populate_qflist(self.stderr)
+    call s:error().create_buffer('error::last')
 
     call vtbox#log#error("job failed: ".self.command)
 endfunction
 
+
+function s:error()
+    if empty(s:__unite__)
+        let s:__unite__ = vtbox#utils#unite#qflist#new('async::job')
+    endif
+
+    return s:__unite__
+endfunction
+let s:__unite__ = {}
 
 "
 " impl::event handlers

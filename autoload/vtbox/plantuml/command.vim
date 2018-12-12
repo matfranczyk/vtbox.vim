@@ -27,18 +27,18 @@ endfunction
 "
 function s:process(input)
     if has_key(a:input, 'check_syntax')
-        return vtbox#plantuml#compile#file(
+        return vtbox#plantuml#compile(
                     \ vtbox#utils#filesystem#current_file())
     endif
 
     if has_key(a:input, 'save')
-        return vtbox#plantuml#save#file(
+        return vtbox#plantuml#export(
                     \ vtbox#utils#filesystem#current_file(),
                     \ a:input.save)
     endif
 
     if has_key(a:input, 'view')
-        return vtbox#plantuml#view#file(
+        return vtbox#plantuml#view(
                     \vtbox#utils#filesystem#current_file())
     endif
 endfunction

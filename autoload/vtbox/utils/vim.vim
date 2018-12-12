@@ -135,7 +135,7 @@ function vtbox#utils#vim#selected_string()
 endfunction
 
 
-function vtbox#utils#vim#make_qflist(data)
+function vtbox#utils#vim#populate_qflist(data)
     silent cexpr a:data
 endfunction
 

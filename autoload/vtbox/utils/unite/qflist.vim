@@ -2,10 +2,10 @@
 let s:cpo_save = &cpo | set cpo&vim
 "----------------------------------
 
-function! vtbox#utils#unite#loc_list#create(source_name)
+function! vtbox#utils#unite#qflist#new(...)
     let l:unite =  {
         \ 'source' : {
-        \   'name' : "vtbox::".a:source_name,
+        \   'name' : empty(a:000) ? "vtbox::qflist" : a:1,
         \   'default_kind' : 'jump_list',
         \
         \   'gather_candidates' : function('s:gather_candidates'),
@@ -19,10 +19,10 @@ function! vtbox#utils#unite#loc_list#create(source_name)
     return l:unite
 endfunction
 
-function s:create_buffer() dict
+function s:create_buffer(buffer_name) dict
     call unite#start(
         \   [self.source.name],
-        \   s:create_context(self.source.name))
+        \   s:create_context(a:buffer_name))
 endfunction
 
 
@@ -46,8 +46,7 @@ function s:create_context(buffer_name)
 
     let l:context.buffer_name = a:buffer_name
     let l:context.wipe = 0
-    let l:context.items = map(getloclist(0), "s:parse_loclist(v:val)")
-    " let l:context.items = map(getloclist(winnr()), "s:parse_loclist(v:val)")
+    let l:context.items = map(getqflist(), "s:parse_loclist(v:val)")
 
     return l:context
 endfunction

@@ -93,7 +93,7 @@ let s:assert = themis#helper('assert')
 
     function! s:dummy_suite.test_method_make_qflist()
         let l:stdout = system("ls -l")
-        call vtbox#utils#vim#make_qflist(l:stdout)
+        call vtbox#utils#vim#populate_qflist(l:stdout)
 
         call s:assert.true(empty(v:errmsg))
     endfunction
