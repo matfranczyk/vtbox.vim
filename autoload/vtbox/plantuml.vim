@@ -94,7 +94,8 @@ function s:on_done_job(file, command, exit_status, stdout, stderr, time_start, t
 endfunction
 
 
-function s:unite()
+function s:output()
+"{{{
     if empty(s:__unite__)
         let s:__unite__ = vtbox#utils#unite#qflist#new('planuml')
     endif
@@ -102,11 +103,11 @@ function s:unite()
     return s:__unite__
 endfunction
 let s:__unite__ = {}
-
+"}}}
 
 function s:error(stderr, msg)
     call vtbox#utils#vim#populate_qflist(a:stderr)
-    call s:unite().create_buffer('error::last')
+    call s:output().create_buffer('error::last')
 
     return s:warn(a:msg)
 endfunction

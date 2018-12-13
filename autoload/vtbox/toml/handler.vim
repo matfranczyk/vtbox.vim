@@ -1,12 +1,14 @@
 "----------------------------------
 let s:cpo_save = &cpo | set cpo&vim
 "----------------------------------
-
-function vtbox#toml#handler#create(file, content_provider)
+"
+" impl::api
+"
+function vtbox#toml#handler#create(file, content_factory)
     return {
         \ "_file"              : a:file,
         \ "_modification_time" : {},
-        \ "_content_factory"   : a:content_provider,
+        \ "_content_factory"   : a:content_factory,
         \
         \ "_create_file" : function("s:_create_file"),
         \
