@@ -12,7 +12,7 @@ function vtbox#utils#workspace#settings#create(
     return {
         \ "_object_factory" : a:object_factory,
         \ "_toml_handler"   : a:toml_handler,
-        \ "_unite_find"     : vtbox#utils#unite#find#factory(a:configuration_buffer_name),
+        \ "_configuration_buffer_name" : a:configuration_buffer_name,
         \
         \ "_object_cache"       : {},
         \ "_is_object_outdated" : function('s:_is_object_outdated'),
@@ -42,7 +42,8 @@ endfunction
 
 
 function s:configuration() dict
-    call self._unite_find.create_buffer([self._toml_handler.file()])
+    return vtbox#workspace#configs#show(
+                \ [self._toml_handler.file()], self._configuration_buffer_name)
 endfunction
 
 
