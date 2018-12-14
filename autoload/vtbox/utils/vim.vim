@@ -136,7 +136,16 @@ endfunction
 
 
 function vtbox#utils#vim#populate_qflist(data)
-    silent cexpr a:data
+    if !vtbox#utils#vim#is_list(a:data)
+        silent cexpr a:data | return
+    endif
+
+    silent cexpr a:data[0]
+
+    let i = 1 | let size = len(a:data)
+    while i < size
+        silent caddexpr a:data[i]
+    let i += 1 | endwhile
 endfunction
 
 
