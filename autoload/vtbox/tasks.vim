@@ -4,7 +4,7 @@ let s:cpo_save = &cpo | set cpo&vim
 "
 " impl::api
 "
-function vtbox#tasks#unite#show()
+function vtbox#tasks#list()
     return s:tasks().create_buffer()
 endfunction
 
@@ -35,7 +35,11 @@ let s:buffer_list    = s:buffer('list')
 "
 let s:job = vtbox#job#async#create()
 
-function vtbox#tasks#unite#async(name, command)
+function vtbox#tasks#async(name, command)
+    if s:job.is_running()
+        return s:warn("previous task's running, please wait oj kill working job :: ".s:job.command())
+    endif
+
     call s:job.command(a:command)
     call s:job.launch( {'on_done_function' : function('s:on_done_job', [a:name])} )
 endfunction
@@ -124,7 +128,7 @@ endfunction
 
 
 function s:action(name, command)
-    return 'call vtbox#tasks#unite#async('.string(a:name).', '.string(a:command).')'
+    return 'call vtbox#tasks#async('.string(a:name).', '.string(a:command).')'
 endfunction
 
 function s:candidate(name, command)
