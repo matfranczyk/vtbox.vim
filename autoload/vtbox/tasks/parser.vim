@@ -3,6 +3,7 @@ let s:cpo_save = &cpo | set cpo&vim
 "----------------------------------
 
 let s:parser = vtbox#tasks#parser#factory#create()
+let s:options = keys(s:parser.options)
 let s:logger = vtbox#utils#logger#create()
 
 "
@@ -26,7 +27,7 @@ endfunction
 " impl
 "
 function s:process(input)
-    if has_key(a:input, 'list') || len(keys(a:input)) == 0
+    if has_key(a:input, 'list') || empty(a:input)
         return vtbox#tasks#list()
     endif
 
@@ -35,17 +36,26 @@ function s:process(input)
                     \ [vtbox#tasks#toml#file()], 'tasks::config')
     endif
 
+    if has_key(a:input, "output")
+        return vtbox#tasks#snapshot#output('[tasks] last:output')
+    endif
+
+    if has_key(a:input, "stdout")
+        return vtbox#tasks#snapshot#stdout('[tasks] last:stdout')
+    endif
+
+    if has_key(a:input, "stderr")
+        return vtbox#tasks#snapshot#stderr('[tasks] last:stdout')
+    endif
 endfunction
 
 
 function s:is_input_valid(parsed)
     call s:logger.clear()
 
-    " if !has_key(a:parsed, 'check_syntax') &&
-    "  \ !has_key(a:parsed, 'save')         &&
-    "  \ !has_key(a:parsed, 'view')
-    "     call s:logger.append('[!] you need to provide one of {check_syntax, save, view} parameters')
-    " endif
+    if !vtbox#utils#vital#OptionParser#any_known_option(a:parsed, s:parser)
+        call s:logger.append('no valid options provided')
+    endif
 
     return s:logger.empty()
 endfunction

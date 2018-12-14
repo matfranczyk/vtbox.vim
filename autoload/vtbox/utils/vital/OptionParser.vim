@@ -20,6 +20,19 @@ function vtbox#utils#vital#OptionParser#generic_execution(
                 \ a:logger.withdraw())
 endfunction
 
+
+function vtbox#utils#vital#OptionParser#any_known_option(parsed_input, parser)
+    let l:options = values(a:parser.options)
+
+    for selected in keys(a:parsed_input)
+        if count(l:options, selected) >= 0
+            return 1
+        endif
+    endfor
+
+    return 0
+endfunction
+
 "
 " impl
 "
