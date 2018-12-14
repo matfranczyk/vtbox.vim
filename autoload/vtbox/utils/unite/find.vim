@@ -21,10 +21,12 @@ function! vtbox#utils#unite#find#factory(source_name)
     return l:unite
 endfunction
 
-function s:create_buffer(stdout_list) dict
+function s:create_buffer(stdout_list, ...) dict
+    let l:buffer_name = empty(a:000) ? self.source.name : a:1
+
     call unite#start(
         \   [self.source.name],
-        \   s:create_context(copy(a:stdout_list), self.source.name))
+        \   s:create_context(copy(a:stdout_list), l:buffer_name))
 endfunction
 
 

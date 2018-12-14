@@ -8,6 +8,10 @@ function vtbox#tasks#toml#handler()
     return s:handler
 endfunction
 
+function vtbox#tasks#toml#file()
+    return s:handler.file()
+endfunction
+
 "
 " impl::private
 "

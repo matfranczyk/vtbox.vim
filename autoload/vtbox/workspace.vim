@@ -34,9 +34,15 @@ function s:cache_path() dict
 endfunction
 
 
+function s:commands()
+	command! -nargs=* -complete=customlist,vtbox#tasks#parser#complete
+			\ Tasks :call vtbox#tasks#parser#execute(<q-args>)
+endfunction
+
 function s:configure() dict
     if exists('*Vtbox_onWorkspaceConfiguration')
         call Vtbox_onWorkspaceConfiguration()
+        call s:commands()
     endif
 endfunction
 

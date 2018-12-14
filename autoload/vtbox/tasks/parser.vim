@@ -29,6 +29,12 @@ function s:process(input)
     if has_key(a:input, 'list') || len(keys(a:input)) == 0
         return vtbox#tasks#list()
     endif
+
+    if has_key(a:input, "edit")
+        return vtbox#workspace#configs#show(
+                    \ [vtbox#tasks#toml#file()], 'tasks::config')
+    endif
+
 endfunction
 
 
