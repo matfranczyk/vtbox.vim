@@ -3,7 +3,6 @@ let s:cpo_save = &cpo | set cpo&vim
 "----------------------------------
 
 let s:parser = vtbox#tasks#parser#factory#create()
-let s:options = keys(s:parser.options)
 let s:logger = vtbox#utils#logger#create()
 
 "
@@ -40,13 +39,6 @@ function s:process(input)
         return vtbox#tasks#snapshot#output('[tasks] last:output')
     endif
 
-    if has_key(a:input, "stdout")
-        return vtbox#tasks#snapshot#stdout('[tasks] last:stdout')
-    endif
-
-    if has_key(a:input, "stderr")
-        return vtbox#tasks#snapshot#stderr('[tasks] last:stdout')
-    endif
 endfunction
 
 

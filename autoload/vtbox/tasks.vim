@@ -16,7 +16,7 @@ function s:log(text)
 endfunction
 
 function s:warn(text)
-    call vtbox#log#warning(s:msg(a:text))
+    call vtbox#log#error(s:msg(a:text))
 endfunction
 
 function s:msg(text)
@@ -35,41 +35,30 @@ let s:buffer_list    = s:buffer('list')
 "
 let s:job = vtbox#job#async#create()
 
-function vtbox#tasks#async(name, command)
+function vtbox#tasks#async(task_title, command)
     if s:job.is_running()
         return s:warn("previous task's running, please wait oj kill working job :: ".s:job.command())
     endif
 
     call s:job.command(a:command)
-    call s:job.launch( {'on_done_function' : function('s:on_done_job', [a:name])} )
+    call s:job.launch( {'on_done_function' : function('s:on_done_job', [a:task_title])} )
 endfunction
 
 
-function s:on_done_job(name, exit_status, stdout, stderr, time_start, time_stop)
+function s:on_done_job(task_title, exit_status, stdout, stderr, time_start, time_stop)
     if a:exit_status == 0
-        return s:log('done :: '.a:name)
+        call s:log('done :: '.a:task_title)
+    else
+        call s:show_error(a:stderr, 'failed :: '.a:task_title)
     endif
 
-    call s:error(a:stderr, 'failed :: '.a:name)
+    return vtbox#tasks#snapshot#save(a:task_title, a:exit_status, a:stdout, a:stderr, a:time_start, a:time_stop)
 endfunction
 
 
-function s:output()
-"{{{
-    if empty(s:__output__)
-        let s:__output__ = vtbox#utils#unite#qflist#new(s:buffer_outcome)
-    endif
-    return s:__output__
-endfunction
-let s:__output__ = {}
-"}}}
-
-
-function s:error(stderr, msg)
-    call vtbox#utils#vim#populate_qflist(a:stderr)
-    call s:output().create_buffer(s:buffer_outcome)
-
-    return s:warn(a:msg)
+function s:show_error(stderr, msg)
+    call vtbox#utils#unite#qflist#create_buffer(s:buffer_outcome, a:stderr)
+    call s:warn(a:msg)
 endfunction
 
 
@@ -127,14 +116,14 @@ function s:gather_candidates(args, context)
 endfunction
 
 
-function s:action(name, command)
-    return 'call vtbox#tasks#async('.string(a:name).', '.string(a:command).')'
+function s:action(task_title, command)
+    return 'call vtbox#tasks#async('.string(a:task_title).', '.string(a:command).')'
 endfunction
 
-function s:candidate(name, command)
+function s:candidate(task_title, command)
     return {
-        \ "word"            : a:name.' :: '.a:command,
-        \ "action__command" : s:action(a:name, a:command),
+        \ "word"            : a:task_title.' :: '.a:command,
+        \ "action__command" : s:action(a:task_title, a:command),
         \ "action__histadd" : 1,
         \ }
 endfunction

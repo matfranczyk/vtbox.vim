@@ -1,11 +1,34 @@
 "----------------------------------
 let s:cpo_save = &cpo | set cpo&vim
 "----------------------------------
+"
+" impl::api
+"
+function! vtbox#utils#unite#qflist#create_buffer(name, ...)
+    if ! empty(a:000)
+        call vtbox#utils#vim#populate_qflist(a:000)
+    endif
 
-function! vtbox#utils#unite#qflist#new(...)
+    return s:unite().create_buffer(a:name)
+endfunction
+
+"
+" impl
+"
+function s:unite()
+"{{{
+    if empty(s:__unite__)
+        let s:__unite__ = s:create()
+    endif
+    return s:__unite__
+endfunction
+let s:__unite__ = {}
+"}}}
+
+function! s:create()
     let l:unite =  {
         \ 'source' : {
-        \   'name' : empty(a:000) ? "vtbox::qflist" : a:1,
+        \   'name' : "vtbox::qflist::extractor",
         \   'default_kind' : 'jump_list',
         \
         \   'gather_candidates' : function('s:gather_candidates'),
@@ -19,6 +42,9 @@ function! vtbox#utils#unite#qflist#new(...)
     return l:unite
 endfunction
 
+"
+" obj::api
+"
 function s:create_buffer(buffer_name) dict
     call unite#start(
         \   [self.source.name],

@@ -90,27 +90,10 @@ function s:on_done_job(file, command, exit_status, stdout, stderr, time_start, t
         return s:log(l:msg)
     endif
 
-    call s:error(a:stderr, l:msg)
+    call vtbox#utils#unite#qflist#create_buffer('[plantuml] stderr', a:stderr)
+    call s:warn(l:msg)
 endfunction
 
-
-function s:output()
-"{{{
-    if empty(s:__unite__)
-        let s:__unite__ = vtbox#utils#unite#qflist#new('planuml')
-    endif
-
-    return s:__unite__
-endfunction
-let s:__unite__ = {}
-"}}}
-
-function s:error(stderr, msg)
-    call vtbox#utils#vim#populate_qflist(a:stderr)
-    call s:output().create_buffer('error::last')
-
-    return s:warn(a:msg)
-endfunction
 
 "
 " impl :: logging
