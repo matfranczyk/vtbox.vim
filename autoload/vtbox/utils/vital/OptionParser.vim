@@ -42,12 +42,14 @@ endfunction
 
 
 function s:howto()
-    return
-         \ "\nHow to provide values (--option=VALUE)?"
-         \ ."\n  - spaces are not supported   ( --option=valid  |  --option=inv alid )"
-         \ ."\n  - multiple values by ','     ( --option=first,second )"
-         \ ."\n"
-         \ ."\n"
+    return join([
+        \ "\n",
+        \ "HowTo: providing arguments for specific option like '--optoin=VALUE'",
+        \ "",
+        \ "  - spaces are not supported   ( --option=valid  |  --option=inv alid )",
+        \ "  - multiple values by ','     ( --option=first,second )",
+        \ "\n"
+        \ ], "\n")
 endfunction
 
 "---------------------------------------
