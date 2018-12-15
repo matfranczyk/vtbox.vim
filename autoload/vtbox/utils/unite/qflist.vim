@@ -28,7 +28,7 @@ let s:__unite__ = {}
 function! s:create()
     let l:unite =  {
         \ 'source' : {
-        \   'name' : "vtbox::qflist::extractor",
+        \   'name' : "[vtbox] qflist",
         \   'default_kind' : 'jump_list',
         \
         \   'gather_candidates' : function('s:gather_candidates'),

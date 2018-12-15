@@ -7,7 +7,7 @@ let s:strings = vtbox#vital#lib('Data.String')
 function! vtbox#utils#unite#find#factory(source_name)
     let l:unite =  {
         \ 'source' : {
-        \   'name' : "vtbox::".a:source_name,
+        \   'name' : vtbox#utils#unite#source(a:source_name),
         \   'default_kind' : 'file',
         \
         \   'gather_candidates' : function('s:gather_candidates'),

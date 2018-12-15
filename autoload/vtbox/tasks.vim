@@ -28,7 +28,6 @@ function s:buffer(msg)
 endfunction
 
 let s:buffer_outcome = s:buffer('outcome')
-let s:buffer_list    = s:buffer('list')
 
 "
 " impl :: async::jobs
@@ -57,7 +56,10 @@ endfunction
 
 
 function s:show_error(stderr, msg)
-    call vtbox#utils#unite#qflist#create_buffer(s:buffer_outcome, a:stderr)
+    call vtbox#utils#unite#list#create_buffer(
+                \ vtbox#utils#unite#source('task '),
+                \ a:stderr,
+                \ a:stdout)
     call s:warn(a:msg)
 endfunction
 
@@ -79,7 +81,7 @@ let s:__tasks__ = {}
 function s:create_tasks()
     let l:unite =  {
         \ 'source' : {
-        \   'name' : s:buffer_list,
+        \   'name' : vtbox#utils#unite#source('tasks execution stderr'),
         \   'default_kind' : 'command',
         \
         \   'gather_candidates' : function('s:gather_candidates'),
@@ -96,7 +98,7 @@ endfunction
 function s:create_buffer() dict
     call unite#start(
         \   [self.source.name],
-        \   s:create_context(s:buffer_list))
+        \   s:create_context(self.source.name))
 endfunction
 
 

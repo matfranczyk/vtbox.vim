@@ -1,6 +1,12 @@
 "----------------------------------
 let s:cpo_save = &cpo | set cpo&vim
 "----------------------------------
+"
+" impl :: api
+"
+function vtbox#utils#unite#source(name)
+    return "[vtbox] ".a:name
+endfunction
 
 function vtbox#utils#unite#copen()
     if empty(getqflist())

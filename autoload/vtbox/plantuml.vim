@@ -90,7 +90,7 @@ function s:on_done_job(file, command, exit_status, stdout, stderr, time_start, t
         return s:log(l:msg)
     endif
 
-    call vtbox#utils#unite#qflist#create_buffer('[plantuml] stderr', a:stderr)
+    call vtbox#utils#unite#list#create_buffer('[plantuml] stderr', a:stderr)
     call s:warn(l:msg)
 endfunction
 

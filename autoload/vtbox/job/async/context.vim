@@ -44,7 +44,7 @@ function s:default_finalizer() dict
         return vtbox#log#message("job done: ".self.command)
     endif
 
-    call vtbox#utils#unite#qflist#create_buffer('[async::job] stderr', self.stderr)
+    call vtbox#utils#unite#list#create_buffer('[async::job] stderr', self.stderr)
     call vtbox#log#error("job failed: ".self.command)
 endfunction
 

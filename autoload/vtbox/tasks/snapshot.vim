@@ -10,7 +10,7 @@ endfunction
 
 
 function vtbox#tasks#snapshot#output(buffer_name)
-    call vtbox#utils#unite#qflist#create_buffer(
+    call vtbox#utils#unite#list#create_buffer(
                 \ a:buffer_name,
                 \ s:snapshot()._stdout,
                 \ s:snapshot()._stderr)
