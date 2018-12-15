@@ -22,8 +22,7 @@ let s:settings = vtbox#utils#workspace#settings#holder#create(
                     \   function('vtbox#find#object#new'),
                     \   vtbox#toml#handler#create(
                     \       vtbox#workspace#manager().cache_path()."/find/settings.toml",
-                    \       function('vtbox#workspace#toml#content#find')),
-                    \   "find:config"
+                    \       function('vtbox#workspace#toml#content#find'))
                     \ ])
                     \)
 "---------------------------------------

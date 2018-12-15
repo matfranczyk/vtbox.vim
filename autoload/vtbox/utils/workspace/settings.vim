@@ -4,15 +4,10 @@ let s:cpo_save = &cpo | set cpo&vim
 "
 " impl::api
 "
-function vtbox#utils#workspace#settings#create(
-            \ object_factory,
-            \ toml_handler,
-            \ configuration_buffer_name)
-
+function vtbox#utils#workspace#settings#create(object_factory, toml_handler)
     return {
         \ "_object_factory" : a:object_factory,
         \ "_toml_handler"   : a:toml_handler,
-        \ "_configuration_buffer_name" : a:configuration_buffer_name,
         \
         \ "_object_cache"       : {},
         \ "_is_object_outdated" : function('s:_is_object_outdated'),
@@ -42,8 +37,8 @@ endfunction
 
 
 function s:configuration() dict
-    return vtbox#workspace#configs#show(
-                \ [self._toml_handler.file()], self._configuration_buffer_name)
+    return vtbox#utils#unite#files_list#show(
+                \ self._toml_handler.file())
 endfunction
 
 

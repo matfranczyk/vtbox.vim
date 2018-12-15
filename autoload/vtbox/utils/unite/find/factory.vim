@@ -4,16 +4,17 @@ let s:cpo_save = &cpo | set cpo&vim
 
 let s:strings = vtbox#vital#lib('Data.String')
 
-function! vtbox#utils#unite#find#factory(name)
-    let l:unie =  {
+function! vtbox#utils#unite#find#factory#create()
+    let l:unite =  {
         \ 'source' : {
-        \   'name' : vtbox#utils#unite#source(a:name),
+        \   'name' : vtbox#utils#unite#source('find::files'),
         \   'default_kind' : 'file',
         \
         \   'gather_candidates' : function('s:gather_candidates'),
         \ },
         \
-        \ 'create_buffer' : function('s:create_buffer')
+        \ 'create_buffer' : function('s:create_buffer'),
+        \ 'show_buffer'   : function('s:show_buffer')
         \ }
 
     call unite#define_source(l:unite.source)
@@ -21,10 +22,19 @@ function! vtbox#utils#unite#find#factory(name)
     return l:unite
 endfunction
 
-function s:create_buffer(stdout_list, ...) dict
+let s:wipe_buffer = 1
+let s:persistent_buffer = 0
+
+function s:create_buffer(stdout_list, buffer_name) dict
     call unite#start(
         \   [self.source.name],
-        \   s:create_context(copy(a:stdout_list), self.source.name))
+        \   s:create_context(copy(a:stdout_list), a:buffer_name, s:persistent_buffer))
+endfunction
+
+function s:show_buffer(stdout_list) dict
+    call unite#start(
+        \   [self.source.name],
+        \   s:create_context(copy(a:stdout_list), 'files', s:wipe_buffer))
 endfunction
 
 
@@ -59,11 +69,11 @@ function s:gather_candidates(args, context)
 endfunction
 
 
-function s:create_context(stdout_list, buffer_name)
+function s:create_context(stdout_list, buffer_name, wipe_buffer)
     let l:context = unite#init#_context({})
 
     let l:context.buffer_name = a:buffer_name
-    let l:context.wipe = 0
+    let l:context.wipe = a:wipe_buffer
     let l:context.items = map(a:stdout_list, "s:parse_find(v:val)")
 
     return l:context

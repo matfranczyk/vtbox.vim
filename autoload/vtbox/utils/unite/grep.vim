@@ -7,10 +7,10 @@ let s:strings = vtbox#vital#lib('Data.String')
 "
 " api::impl
 "
-function! vtbox#utils#unite#grep#factory(source_name)
+function! vtbox#utils#unite#grep#factory()
     let l:unite =  {
         \ 'source' : {
-        \   'name' : "vtbox::".a:source_name,
+        \   'name' : vtbox#utils#unite#source('grep'),
         \   'default_kind' : ["file", "jump_list"],
         \
         \   'gather_candidates' : function('s:gather_candidates'),
@@ -30,7 +30,7 @@ endfunction
 function s:create_buffer(stdout_list) dict
     return unite#start(
         \   [self.source.name],
-        \   s:create_context(copy(a:stdout_list), self.source.name))
+        \   s:create_context(copy(a:stdout_list), "grep"))
 endfunction
 
 

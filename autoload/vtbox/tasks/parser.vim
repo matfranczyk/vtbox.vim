@@ -31,8 +31,8 @@ function s:process(input)
     endif
 
     if has_key(a:input, "edit")
-        return vtbox#workspace#configs#show(
-                    \ [vtbox#tasks#toml#file()], 'tasks::config')
+        return vtbox#utils#unite#files_list#show(
+                    \ vtbox#tasks#toml#file())
     endif
 
     if has_key(a:input, "output")

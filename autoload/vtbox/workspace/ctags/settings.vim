@@ -22,8 +22,7 @@ let s:settings = vtbox#utils#workspace#settings#holder#create(
                     \   function('vtbox#find#object#new'),
                     \   vtbox#toml#handler#create(
                     \       vtbox#workspace#manager().cache_path()."/ctags/settings.toml",
-                    \       function('vtbox#workspace#toml#content#tags')),
-                    \   "ctags:config"
+                    \       function('vtbox#workspace#toml#content#tags'))
                     \ ])
                     \)
 "---------------------------------------

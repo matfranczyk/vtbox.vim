@@ -23,7 +23,7 @@ function s:process(input)
         call l:object.inames( vtbox#utils#string#wrap(a:input.inames, '*') )
     endif
 
-    call vtbox#find#unite(l:object)
+    call vtbox#find#execute(l:object, 'unite', 'find::workspace')
 endfunction
 
 

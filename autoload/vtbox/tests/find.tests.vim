@@ -86,13 +86,6 @@ let s:suite.after  = function("s:remove_stub_files")
     endfunction
 
 
-    function! s:suite.no_action_when_invalid_command()
-        let l:object = s:find_object_stub(function('s:invalid_find_command_cmd'))
-
-        call vtbox#find#unite(l:object)
-    endfunction
-
-
     function! s:suite.should_open_file_in_mode_split()
         let l:object = s:find_object_stub(function('s:find_file_1_cmd'))
 

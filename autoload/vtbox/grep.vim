@@ -46,7 +46,7 @@ endfunction
 
 function s:unite()
     if empty(s:_unite_instance_)
-        let s:_unite_instance_ = vtbox#utils#unite#grep#factory("grep")
+        let s:_unite_instance_ = vtbox#utils#unite#grep#factory()
     endif
     return s:_unite_instance_
 endfunction

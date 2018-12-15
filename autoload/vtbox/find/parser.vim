@@ -19,7 +19,7 @@ function s:process(parsed)
         call l:object.inames( vtbox#utils#string#wrap(a:parsed.inames, '*') )
     endif
 
-    return vtbox#find#unite(l:object)
+    call vtbox#find#execute(l:object, 'unite', 'find')
 endfunction
 
 

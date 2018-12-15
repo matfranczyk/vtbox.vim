@@ -4,12 +4,7 @@ let s:cpo_save = &cpo | set cpo&vim
 "
 " impl::api
 "
-function vtbox#find#unite(object)
-    call vtbox#find#execute(a:object, 'unite')
-endfunction
-
-
-function vtbox#find#execute(object, opening_mode)
+function vtbox#find#execute(object, opening_mode, ...)
     try
         let l:stdout = vtbox#find#system_call(a:object)
     catch
@@ -21,7 +16,9 @@ function vtbox#find#execute(object, opening_mode)
     endif
 
     if (a:opening_mode == "unite") || (len(l:stdout) > 1)
-        return s:unite().create_buffer(l:stdout)
+        return vtbox#utils#unite#files_list#buffer(
+            \ l:stdout,
+            \ empty(a:000) ? 'files::list' : a:1)
     endif
 
     return vtbox#utils#vim#open_file(l:stdout[0], a:opening_mode)
@@ -38,7 +35,6 @@ function vtbox#find#system_call(object)
     return l:stdout
 endfunction
 
-
 "
 " impl
 "
@@ -51,15 +47,6 @@ function s:log(...)
     let l:txt = empty(a:000) ? "" : a:1
     return "[find] ".l:txt
 endfunction
-
-
-function s:unite()
-    if empty(s:_unite_instance_)
-        let s:_unite_instance_ = vtbox#utils#unite#find#factory("find_files")
-    endif
-    return s:_unite_instance_
-endfunction
-let s:_unite_instance_ = {}
 
 "---------------------------------------
 let &cpo = s:cpo_save | unlet s:cpo_save
