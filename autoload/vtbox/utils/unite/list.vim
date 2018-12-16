@@ -27,7 +27,7 @@ let s:__unite__ = {}
 function! s:create()
     let l:unite =  {
         \ 'source' : {
-        \   'name' : vtbox#utils#unite#source('lists'),
+        \   'name' : vtbox#utils#unite#source(),
         \   'default_kind' : 'common',
         \
         \   'gather_candidates' : function('s:gather_candidates'),

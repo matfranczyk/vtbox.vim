@@ -1,13 +1,29 @@
 "----------------------------------
 let s:cpo_save = &cpo | set cpo&vim
 "----------------------------------
-
-let s:strings = vtbox#vital#lib('Data.String')
+"
+" impl::api
+"
+function vtbox#utils#unite#grep#create_buffer(grep_output, buffer_name)
+    return s:unite().create_buffer(
+                \ a:grep_output,
+                \ a:buffer_name)
+endfunction
 
 "
-" api::impl
+" impl
 "
-function! vtbox#utils#unite#grep#factory()
+function s:unite()
+"{{{
+    if empty(s:__unite__)
+        let s:__unite__ = s:create()
+    endif
+    return s:__unite__
+endfunction
+let s:__unite__ = {}
+"}}}
+
+function! s:create()
     let l:unite =  {
         \ 'source' : {
         \   'name' : vtbox#utils#unite#source('grep'),
@@ -23,20 +39,20 @@ function! vtbox#utils#unite#grep#factory()
 
     return l:unite
 endfunction
-
 "
 " obj::api
 "
-function s:create_buffer(stdout_list) dict
+function s:create_buffer(grep_output, buffer_name) dict
     return unite#start(
         \   [self.source.name],
-        \   s:create_context(copy(a:stdout_list), "grep"))
+        \   s:create_context(copy(a:grep_output), a:buffer_name))
 endfunction
-
 
 "
 " impl
 "
+let s:strings = vtbox#vital#lib('Data.String')
+
 function s:candidate(item, text_width)
     return {
         \ "action__path" : a:item.file,
@@ -83,12 +99,12 @@ function s:gather_candidates(args, context)
 endfunction
 
 
-function s:create_context(stdout_list, buffer_name)
+function s:create_context(grep_output, buffer_name)
     let l:context = unite#init#_context({})
 
     let l:context.buffer_name = a:buffer_name
     let l:context.wipe = 0
-    let l:context.items = map(a:stdout_list, "s:parse_grep(v:val)")
+    let l:context.items = map(a:grep_output, "s:parse_grep(v:val)")
 
     return l:context
 endfunction

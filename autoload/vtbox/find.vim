@@ -4,15 +4,15 @@ let s:cpo_save = &cpo | set cpo&vim
 "
 " impl::api
 "
-function vtbox#find#execute(object, opening_mode, ...)
+function vtbox#find#execute(find_object, opening_mode, ...)
     try
-        let l:stdout = vtbox#find#system_call(a:object)
+        let l:stdout = vtbox#find#system_call(a:find_object)
     catch
         return vtbox#exception#log(s:log("problem with system execution"))
     endtry
 
     if empty(l:stdout)
-        return vtbox#log#echo(s:log("file has not been found: [".a:object.pattern()."]"))
+        return vtbox#log#echo(s:log("file has not been found: [".a:find_object.pattern()."]"))
     endif
 
     if (a:opening_mode == "unite") || (len(l:stdout) > 1)
@@ -25,8 +25,8 @@ function vtbox#find#execute(object, opening_mode, ...)
 endfunction
 
 
-function vtbox#find#system_call(object)
-    let l:stdout =  vtbox#utils#vim#systemlist(s:command(a:object))
+function vtbox#find#system_call(find_object)
+    let l:stdout =  vtbox#utils#vim#systemlist(s:command(a:find_object))
 
     if v:shell_error
         throw s:log("v:shell_error: ".v:shell_error)
@@ -38,8 +38,8 @@ endfunction
 "
 " impl
 "
-function s:command(object)
-    return join(a:object.commands(), " ; ")
+function s:command(find_object)
+    return join(a:find_object.commands(), " ; ")
 endfunction
 
 

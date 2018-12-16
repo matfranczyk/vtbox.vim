@@ -27,7 +27,7 @@ function s:process(input)
         call l:object.icase()
     endif
 
-    call vtbox#grep#execute(l:object)
+    call vtbox#grep#execute(l:object, "grep::workspace")
 endfunction
 
 

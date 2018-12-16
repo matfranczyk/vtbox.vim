@@ -40,7 +40,8 @@ endfunction
 
 function s:process(parsed)
     call vtbox#grep#execute(
-                \ s:create_object(a:parsed))
+                \ s:create_object(a:parsed),
+                \ 'grep')
 endfunction
 
 

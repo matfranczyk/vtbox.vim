@@ -4,8 +4,11 @@ let s:cpo_save = &cpo | set cpo&vim
 "
 " impl :: api
 "
-function vtbox#utils#unite#source(name)
-    return "[vtbox] ".a:name
+function vtbox#utils#unite#source(...)
+    if empty(a:000)
+        return "[vtbox]"
+    endif
+    return "[vtbox] ".a:1
 endfunction
 
 

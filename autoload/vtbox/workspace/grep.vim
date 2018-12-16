@@ -24,7 +24,7 @@ function s:execute(fixed_pattern)
         return vtbox#exception#log("[workspace:grep:object]")
     endtry
 
-    call vtbox#grep#execute(l:object)
+    call vtbox#grep#execute(l:object, "grep::workspace")
 endfunction
 
 "---------------------------------------

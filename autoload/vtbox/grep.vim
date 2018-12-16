@@ -4,7 +4,7 @@ let s:cpo_save = &cpo | set cpo&vim
 "
 " impl::api
 "
-function vtbox#grep#execute(object)
+function vtbox#grep#execute(object, ...)
     try
         let l:stdout = vtbox#grep#system_call(a:object)
     catch
@@ -15,7 +15,9 @@ function vtbox#grep#execute(object)
         return vtbox#log#echo(s:log("pattern has not been found: [".a:object.pattern()."]"))
     endif
 
-    return s:unite().create_buffer(l:stdout)
+    return vtbox#utils#unite#grep#create_buffer(
+                \ l:stdout,
+                \ empty(a:000) ? 'grep' : a:1)
 endfunction
 
 
@@ -42,15 +44,6 @@ endfunction
 function s:log(msg)
     return "[grep] ".a:msg
 endfunction
-
-
-function s:unite()
-    if empty(s:_unite_instance_)
-        let s:_unite_instance_ = vtbox#utils#unite#grep#factory()
-    endif
-    return s:_unite_instance_
-endfunction
-let s:_unite_instance_ = {}
 
 "---------------------------------------
 let &cpo = s:cpo_save | unlet s:cpo_save
