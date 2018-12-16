@@ -47,10 +47,8 @@ endfunction
 function s:is_input_valid(parsed)
     call s:logger.clear()
 
-    if !has_key(a:parsed, 'check_syntax') &&
-     \ !has_key(a:parsed, 'save')         &&
-     \ !has_key(a:parsed, 'view')
-        call s:logger.append('[!] you need to provide one of {check_syntax, save, view} parameters')
+    if !vtbox#utils#vital#OptionParser#any_known_option(a:parsed, s:parser)
+        call s:logger.append('no valid options provided')
     endif
 
     return s:logger.empty()
