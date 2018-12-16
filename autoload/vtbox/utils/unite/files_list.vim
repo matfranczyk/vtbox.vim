@@ -20,7 +20,7 @@ endfunction
 function s:unite()
 "{{{
     if empty(s:__unite__)
-        let s:__unite__ = vtbox#utils#unite#find#factory#create()
+        let s:__unite__ = vtbox#utils#unite#files_list#factory#create()
     endif
     return s:__unite__
 endfunction

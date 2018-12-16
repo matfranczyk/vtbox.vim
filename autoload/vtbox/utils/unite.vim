@@ -8,6 +8,16 @@ function vtbox#utils#unite#source(name)
     return "[vtbox] ".a:name
 endfunction
 
+
+function vtbox#utils#unite#wipe_buffer()
+    return 1
+endfunction
+
+function vtbox#utils#unite#persistent_buffer()
+    return 0
+endfunction
+
+
 function vtbox#utils#unite#copen()
     if empty(getqflist())
         return vtbox#log#echo('lack of quickfix list')

@@ -1,19 +1,20 @@
 "----------------------------------
 let s:cpo_save = &cpo | set cpo&vim
 "----------------------------------
-
-let s:strings = vtbox#vital#lib('Data.String')
-
-function! vtbox#utils#unite#find#factory(name)
-    let l:unie =  {
+"
+" api
+"
+function! vtbox#utils#unite#files_list#factory#create()
+    let l:unite =  {
         \ 'source' : {
-        \   'name' : vtbox#utils#unite#source(a:name),
+        \   'name' : vtbox#utils#unite#source('find::files'),
         \   'default_kind' : 'file',
         \
         \   'gather_candidates' : function('s:gather_candidates'),
         \ },
         \
-        \ 'create_buffer' : function('s:create_buffer')
+        \ 'create_buffer' : function('s:create_buffer'),
+        \ 'show_buffer'   : function('s:show_buffer')
         \ }
 
     call unite#define_source(l:unite.source)
@@ -21,10 +22,27 @@ function! vtbox#utils#unite#find#factory(name)
     return l:unite
 endfunction
 
-function s:create_buffer(stdout_list, ...) dict
+"
+" impl
+"
+let s:strings = vtbox#vital#lib('Data.String')
+
+function s:create_buffer(files_list, buffer_name) dict
     call unite#start(
         \   [self.source.name],
-        \   s:create_context(copy(a:stdout_list), self.source.name))
+        \   s:create_context(
+        \       a:files_list,
+        \       a:buffer_name,
+        \       vtbox#utils#unite#persistent_buffer()))
+endfunction
+
+function s:show_buffer(files_list) dict
+    call unite#start(
+        \   [self.source.name],
+        \   s:create_context(
+        \       a:files_list,
+        \       'files',
+        \       vtbox#utils#unite#wipe_buffer()))
 endfunction
 
 
@@ -59,18 +77,18 @@ function s:gather_candidates(args, context)
 endfunction
 
 
-function s:create_context(stdout_list, buffer_name)
+function s:create_context(files_list, buffer_name, wipe_buffer)
     let l:context = unite#init#_context({})
 
     let l:context.buffer_name = a:buffer_name
-    let l:context.wipe = 0
-    let l:context.items = map(a:stdout_list, "s:parse_find(v:val)")
+    let l:context.wipe = a:wipe_buffer
+    let l:context.items = map(copy(a:files_list), "s:parse_list(v:val)")
 
     return l:context
 endfunction
 
 
-function s:parse_find(line)
+function s:parse_list(line)
     let l:filename   = fnamemodify(a:line, ":t")
     let l:parent_dir = fnamemodify(a:line, ':p:h:t')
 
