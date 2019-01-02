@@ -12,10 +12,14 @@ function vtbox#workspace#manager()
 endfunction
 let s:_instance_ = {}
 
+"
+" impl
+"
+let s:label = 'workspace'
 
 function s:factory()
     if ! vtbox#workspace#cache#local().is_available()
-        call vtbox#exception#throw("cannot create workspace#manager if cache local is not available")
+        call vtbox#throw(s:label, "cannot create workspace#manager if cache local is not available")
     endif
 
     return {

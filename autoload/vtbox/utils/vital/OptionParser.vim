@@ -37,7 +37,7 @@ endfunction
 " impl
 "
 function s:invalid_usage(parser, message)
-    call vtbox#log#echo(
+    call vtbox#echo(
             \ "\n>> Invalid usage << \n"
             \ .a:message
             \ ."\n\n"
@@ -57,10 +57,10 @@ endfunction
 function s:howto()
     return join([
         \ "\n",
-        \ "HowTo: providing arguments for specific option like '--optoin=VALUE'",
+        \ "[[general info]] providing data for options like '--option=VALUE'",
         \ "",
-        \ "  - spaces are not supported   ( --option=valid  |  --option=inv alid )",
-        \ "  - multiple values by ','     ( --option=first,second )",
+        \ "  -> spaces are not supported ( --option=valid  |  --option=inv alid )",
+        \ "  -> if feasible few items could be provided by using ','     ( --option=first,second )",
         \ "\n"
         \ ], "\n")
 endfunction

@@ -16,12 +16,14 @@ endfunction
 "
 " impl
 "
+let s:label = 'grep::workspace'
+
 function s:execute(fixed_pattern)
     try
         let l:object = vtbox#workspace#grep#settings#get().object()
         call l:object.fixed(a:fixed_pattern)
     catch
-        return vtbox#exception#log("[workspace:grep:object]")
+        return vtbox#show_exception(s:label, "cannot set 'fixed' property")
     endtry
 
     call vtbox#grep#execute(l:object, "grep::workspace")

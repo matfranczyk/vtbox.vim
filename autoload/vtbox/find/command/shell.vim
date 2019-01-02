@@ -2,6 +2,7 @@
 let s:cpo_save = &cpo | set cpo&vim
 "----------------------------------
 
+let s:label = 'find::shell::composer'
 let s:logger = vtbox#utils#logger#create()
 let s:ignore_dirs = ['.svn', '.git', vtbox#workspace#cache#dirname()]
 
@@ -16,7 +17,7 @@ function vtbox#find#command#shell#compose(data)
         \       '!empty(v:val)')
 
     if ! s:logger.empty()
-        call vtbox#log#error(s:logger.withdraw())
+        call vtbox#error(s:label, s:logger.withdraw())
     endif
 
     if !empty(l:commands)

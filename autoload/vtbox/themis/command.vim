@@ -25,6 +25,8 @@ endfunction
 "
 " impl
 "
+let s:label = 'themis'
+
 function s:process(input)
     if has_key(a:input, "current_buffer")
         return s:launch_tests(expand("%:p"))
@@ -55,7 +57,7 @@ endfunction
 
 function s:launch_tests(files)
     if !executable('themis')
-        return vtbox#log#error('themis command cannot be found')
+        return vtbox#error(s:label, 'themis command cannot be found')
     endif
 
     let l:results = s:run_tests(
@@ -69,7 +71,7 @@ function s:launch_tests(files)
         return vtbox#utils#unite#copen()
     endif
 
-    return vtbox#log#message("[themis::passed] number of passing files [".l:number_of_files."]")
+    return vtbox#message(s:label, "number of passing files [".l:number_of_files."]")
 endfunction
 
 

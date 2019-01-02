@@ -87,28 +87,18 @@ function s:on_done_job(file, command, exit_status, stdout, stderr, time_start, t
     let l:msg = a:command." ".a:file
 
     if a:exit_status == 0
-        return s:log(l:msg)
+        return vtbox#message(s:label, l:msg)
     endif
 
     call vtbox#utils#unite#list#create_buffer('[plantuml] stderr', a:stderr)
-    call s:warn(l:msg)
+    call vtbox#warning(s:label, l:msg)
 endfunction
 
 
 "
 " impl :: logging
 "
-function s:log(text)
-    call vtbox#log#echo(s:msg(a:text))
-endfunction
-
-function s:warn(text)
-    call vtbox#log#warning(s:msg(a:text))
-endfunction
-
-function s:msg(text)
-    return "[Plantuml] ".a:text
-endfunction
+let s:label = 'plantuml'
 
 "---------------------------------------
 let &cpo = s:cpo_save | unlet s:cpo_save

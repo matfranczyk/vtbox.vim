@@ -18,12 +18,14 @@ function vtbox#workspace#find#visual_word(...)
 endfunction
 
 
+let s:label = 'find::workspace'
+
 function vtbox#workspace#find#filename(filename_pattern, opening_mode)
     try
         let l:object = vtbox#workspace#find#settings#get().object()
         call l:object.names(a:filename_pattern)
     catch
-        return vtbox#exception#log("[workspace:find:object]")
+        return vtbox#show_exception(s:label, "cannot set 'names' property")
     endtry
 
     call vtbox#find#execute(l:object, a:opening_mode)

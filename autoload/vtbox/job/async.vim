@@ -15,6 +15,8 @@ endfunction
 "
 " impl
 "
+let s:label = 'job::async'
+
 function s:factory()
     return {
         \ "_job"        : vtbox#utils#optional#create("job::id"),
@@ -51,7 +53,7 @@ function s:launch(...) dict
                 \)
     catch
         call self._job.reset()
-        call vtbox#exception#log('async:job failed')
+        call vtbox#show_exception(s:label, 'problem with start job')
     endtry
 endfunction
 

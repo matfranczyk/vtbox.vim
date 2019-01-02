@@ -23,7 +23,7 @@ endfunction
 
 function vtbox#utils#unite#copen()
     if empty(getqflist())
-        return vtbox#log#echo('lack of quickfix list')
+        return vtbox#echo('lack of quickfix list')
     endif
 
 	execute "Unite -buffer-name=quickfix quickfix"
@@ -32,7 +32,7 @@ endfunction
 
 function vtbox#utils#unite#lopen()
     if empty(getloclist(0))
-        return vtbox#log#echo('lack of location lists')
+        return vtbox#echo('lack of location lists')
     endif
 
 	execute "Unite -buffer-name=location_list location_list"

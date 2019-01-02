@@ -29,6 +29,8 @@ command!  -nargs=* -complete=customlist,vtbox#grep#parser#complete
 "
 " bootstrap: workspace
 "
+let s:label = 'plugin::configuration'
+
 if vtbox#workspace#cache#local().is_available()
     call vtbox#workspace#manager().configure()
 else
@@ -38,15 +40,13 @@ else
         try
             call vtbox#workspace#cache#local().create()
         catch
-            call vtbox#exception#rethrow('cannot create local workspace')
+            call vtbox#rethrow(s:label, 'cannot create local workspace')
         endtry
 
         call vtbox#workspace#manager().configure()
         delcommand WorkspaceCreate
     endfunction
 endif
-
-
 
 "---------------------------------------
 let &cpo = s:cpo_save | unlet s:cpo_save

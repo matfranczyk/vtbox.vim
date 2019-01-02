@@ -22,13 +22,15 @@ endfunction
 "
 " obj::api
 "
+let s:label = 'workspace::settings'
+
 function s:object() dict
     if self._is_object_outdated()
         try
             let self._object_cache = self._create_object()
         catch
             let self._object_cache = {}
-            call vtbox#exception#rethrow("cannot create settings:object")
+            call vtbox#rethrow(s:label, 'fatal: object creation')
         endtry
     endif
 

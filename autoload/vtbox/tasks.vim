@@ -9,34 +9,13 @@ function vtbox#tasks#list()
 endfunction
 
 "
-" impl :: logging
-"
-function s:log(text)
-    call vtbox#log#echo(s:msg(a:text))
-endfunction
-
-function s:warn(text)
-    call vtbox#log#error(s:msg(a:text))
-endfunction
-
-function s:msg(text)
-    return "[Tasks] ".a:text
-endfunction
-
-function s:buffer(msg)
-    return "tasks::".a:msg
-endfunction
-
-let s:buffer_outcome = s:buffer('outcome')
-
-"
 " impl :: async::jobs
 "
 let s:job = vtbox#job#async#create()
 
 function vtbox#tasks#async(task_title, command)
     if s:job.is_running()
-        return s:warn("previous task's running, please wait oj kill working job :: ".s:job.command())
+        return vtbox#warning(s:label, "previous task's running, please wait oj kill working job :: ".s:job.command())
     endif
 
     call s:job.command(a:command)
@@ -46,7 +25,7 @@ endfunction
 
 function s:on_done_job(task_title, exit_status, stdout, stderr, time_start, time_stop)
     if a:exit_status == 0
-        call s:log('done :: '.a:task_title)
+        call vtbox#echo(s:label, 'done :: '.a:task_title)
     else
         call s:show_error(a:stderr, 'failed :: '.a:task_title)
     endif
@@ -60,13 +39,15 @@ function s:show_error(stderr, msg)
                 \ vtbox#utils#unite#source('task '),
                 \ a:stderr,
                 \ a:stdout)
-    call s:warn(a:msg)
+    call vtbox#warning(s:label, a:msg)
 endfunction
 
 
 "
 " impl :: tasks
 "
+let s:label = 'tasks'
+
 function s:tasks()
 "{{{
    if empty(s:__tasks__)

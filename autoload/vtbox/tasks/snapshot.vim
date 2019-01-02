@@ -15,24 +15,8 @@ function vtbox#tasks#snapshot#output(buffer_name)
                 \ s:snapshot()._stdout,
                 \ s:snapshot()._stderr)
 
-    call vtbox#log#echo(s:snapshot().info())
+    call vtbox#echo(s:snapshot().info())
 endfunction
-
-" function vtbox#tasks#snapshot#stdout(buffer_name)
-"     call vtbox#utils#unite#qflist#create_buffer(
-"                 \ a:buffer_name,
-"                 \ s:snapshot()._stdout)
-
-"     call vtbox#log#echo(s:snapshot().info())
-" endfunction
-
-" function vtbox#tasks#snapshot#stderr(buffer_name)
-"     call vtbox#utils#unite#qflist#create_buffer(
-"                 \ a:buffer_name,
-"                 \ s:snapshot()._stderr)
-
-"     call vtbox#log#echo(s:snapshot().info())
-" endfunction
 
 "
 " impl

@@ -10,7 +10,7 @@ function vtbox#vimfiler#single_file(vimfiler_instance)
         return l:item
     endif
 
-    call vtbox#exception#throw("there's no readable file")
+    call vtbox#throw(s:label, "there's no readable file")
 endfunction
 
 
@@ -23,7 +23,7 @@ function vtbox#vimfiler#get_items(vimfiler_instance)
     try
         return [ vimfiler#get_file(a:vimfiler_instance, line('.')).action__path ]
     catch
-        call vtbox#exception#throw('not action__path existed')
+        call vtbox#throw(s:label, 'not action__path existed')
     endtry
 endfunction
 
@@ -35,6 +35,8 @@ endfunction
 "
 " impl
 "
+let s:label = 'vimfiler'
+
 function s:single_item(vimfiler_instance) abort
     let l:marked = vimfiler#get_marked_files(a:vimfiler_instance)
     if ! empty(l:marked)
@@ -42,13 +44,13 @@ function s:single_item(vimfiler_instance) abort
             return l:marked[0].action__path
         endif
 
-        call vtbox#exception#throw('more than one item')
+        call vtbox#throw(s:label, 'more than one item')
     endif
 
     try
         return vimfiler#get_file(a:vimfiler_instance, line('.')).action__path
     catch
-        call vtbox#exception#throw('not action__path existed')
+        call vtbox#throw(s:label, 'not action__path existed')
     endtry
 endfunction
 

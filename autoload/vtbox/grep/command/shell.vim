@@ -2,6 +2,7 @@
 let s:cpo_save = &cpo | set cpo&vim
 "----------------------------------
 
+let s:label = 'grep::shell::composer'
 let s:logger  = vtbox#utils#logger#create()
 let s:ignore_dirs = ['.svn', '.git', vtbox#workspace#cache#dirname()]
 
@@ -16,14 +17,14 @@ function vtbox#grep#command#shell#compose(data)
         \       '!empty(v:val)')
 
     if ! s:logger.empty()
-        call vtbox#log#error(s:logger.withdraw())
+        call vtbox#error(s:label, s:logger.withdraw())
     endif
 
     if !empty(l:commands)
         return l:commands
     endif
 
-    call s:throw("cannot compose valid gnu grep command")
+    call vtbox#throw(s:label, "cannot compose valid gnu grep command")
 endfunction
 
 
@@ -72,13 +73,13 @@ endfunction
 
 function vtbox#grep#command#shell#compose_paths(attributes)
     if !has_key(a:attributes, 'paths')
-        call s:throw("lack of paths")
+        call vtbox#throw(s:label, "lack of paths")
     endif
 
     let l:paths = filter(copy(a:attributes.paths), 's:is_path_valid(v:val)')
 
     if empty(l:paths)
-        call s:throw("no valid paths")
+        call vtbox#throw(s:label, "no valid paths")
     endif
 
     return join(map(l:paths, 'vtbox#utils#filesystem#full_path(v:val)'), " ")
@@ -91,12 +92,12 @@ endfunction
 
 function vtbox#grep#command#shell#compose_pattern(attributes)
     if has_key(a:attributes, 'regex') && has_key(a:attributes, 'fixed')
-        call s:throw("cannot compose for both regex & fixed")
+        call vtbox#throw(s:label, "cannot compose for both regex & fixed")
     endif
 
     if has_key(a:attributes, 'regex')
         if len(a:attributes.regex) > 1
-            call s:throw('more than single regex pattern')
+            call vtbox#throw(s:label, 'more than single regex pattern')
         endif
 
         return "-E '".a:attributes.regex[0]."'"
@@ -105,13 +106,13 @@ function vtbox#grep#command#shell#compose_pattern(attributes)
 
     if has_key(a:attributes, 'fixed')
         if len(a:attributes.fixed) > 1
-            call s:throw('more than single fixed pattern')
+            call vtbox#throw(s:label, 'more than single fixed pattern')
         endif
 
         return '-F "'.s:escape(a:attributes.fixed[0]).'"'
     endif
 
-    call s:throw("lack of fixed/regex pattern")
+    call vtbox#throw(s:label, "lack of fixed/regex pattern")
 endfunction
 
 
@@ -210,11 +211,6 @@ endfunction
 
 function s:extract_exclude_file_inames(asttribute)
     return s:extract_attribute(a:asttribute, "exclude_file_inames")
-endfunction
-
-
-function s:throw(info)
-    throw "[grep:shell:command] ".a:info
 endfunction
 
 "---------------------------------------

@@ -13,6 +13,8 @@ endfunction
 "
 " impl
 "
+let s:label = 'job::async::context'
+
 function s:create_attributes(command, properties)
     return {
         \ 'command' : a:command,
@@ -41,11 +43,11 @@ endfunction
 
 function s:default_finalizer() dict
     if self.exit_status == 0
-        return vtbox#log#message("job done: ".self.command)
+        return vtbox#message(s:label, "job done: ".self.command)
     endif
 
     call vtbox#utils#unite#list#create_buffer('[async::job] stderr', self.stderr)
-    call vtbox#log#error("job failed: ".self.command)
+    call vtbox#error(s:label, "job failed: ".self.command)
 endfunction
 
 

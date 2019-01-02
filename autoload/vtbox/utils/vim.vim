@@ -89,7 +89,7 @@ endfunction
 
 function s:open_error_list(cmd)
     try | execute a:cmd | catch
-        return vtbox#log#echo("error list doesn't exist")
+        return vtbox#echo("error list doesn't exist")
     endtry
 endfunction
 
