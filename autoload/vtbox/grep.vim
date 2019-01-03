@@ -12,7 +12,7 @@ function vtbox#grep#execute(object, ...)
     endtry
 
     if empty(l:stdout)
-        return vtbox#echo(s:label, "pattern has not been found: [".a:object.pattern()."]"))
+        return vtbox#echo(s:label, "pattern has not been found: [".a:object.pattern()."]")
     endif
 
     return vtbox#utils#unite#grep#create_buffer(
