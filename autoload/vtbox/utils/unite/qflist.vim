@@ -59,7 +59,8 @@ endfunction
 function s:candidate(item)
     return {
         \ "word"              : vtbox#utils#string#format(a:item.text, 100)
-        \                       ."\t".vtbox#utils#filesystem#relative_path(a:item.file).":".a:item.line,
+        \                       ."\t".vtbox#utils#filesystem#relative_path(a:item.file)
+        \                       .' | '.a:item.line.' |',
         \ "action__path"      : a:item.file,
         \ "action__buffer_nr" : a:item.bufnr,
         \ "action__line"      : a:item.line,
@@ -72,12 +73,12 @@ function s:create_context(buffer_name)
 
     let l:context.buffer_name = a:buffer_name
     let l:context.wipe = 0
-    let l:context.items = map(getqflist(), "s:parse_loclist(v:val)")
+    let l:context.items = map(getqflist(), "s:parse_qflist(v:val)")
 
     return l:context
 endfunction
 
-function s:parse_loclist(line)
+function s:parse_qflist(line)
     let l:bufnr = a:line.bufnr
 
     return {
