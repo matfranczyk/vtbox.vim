@@ -69,7 +69,6 @@ function s:command(...) dict
     return self._command.value(a:1)
 endfunction
 
-
 "---------------------------------------
 let &cpo = s:cpo_save | unlet s:cpo_save
 "---------------------------------------

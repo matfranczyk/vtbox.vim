@@ -30,7 +30,7 @@ let s:__unite__ = {}
 function! s:create()
     let l:unite =  {
         \ 'source' : {
-        \   'name' : vtbox#utils#unite#source('find::files'),
+        \   'name' : vtbox#stamp('find::files'),
         \   'default_kind' : 'file',
         \
         \   'gather_candidates' : function('s:gather_candidates'),

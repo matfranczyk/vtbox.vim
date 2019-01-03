@@ -6,7 +6,9 @@ let s:cpo_save = &cpo | set cpo&vim
 "
 function! vtbox#utils#unite#qflist#create_buffer(name, ...)
     if ! empty(a:000)
-        call vtbox#utils#vim#populate_qflist(a:000)
+        for item in a:000
+            call vtbox#utils#vim#populate_qflist(item)
+        endfor
     endif
 
     return s:unite().create_buffer(a:name)
@@ -28,7 +30,7 @@ let s:__unite__ = {}
 function! s:create()
     let l:unite =  {
         \ 'source' : {
-        \   'name' : "[vtbox] qflist",
+        \   'name' : vtbox#stamp('qflist'),
         \   'default_kind' : 'jump_list',
         \
         \   'gather_candidates' : function('s:gather_candidates'),
@@ -57,6 +59,10 @@ function s:gather_candidates(args, context)
 endfunction
 
 function s:candidate(item)
+    if !has_key(a:item, 'file')
+        return { "word" : vtbox#utils#string#format(a:item.text, 100) }
+    endif
+
     return {
         \ "word"              : vtbox#utils#string#format(a:item.text, 100)
         \                       ."\t".vtbox#utils#filesystem#relative_path(a:item.file)
@@ -81,10 +87,14 @@ endfunction
 function s:parse_qflist(line)
     let l:bufnr = a:line.bufnr
 
+    if l:bufnr == 0
+        return {"text"  : vtbox#utils#string#trim(a:line.text)}
+    endif
+
     return {
         \ "bufnr" : l:bufnr,
-        \ "file"  : l:bufnr == 0 ? "" : bufname(l:bufnr),
         \ "text"  : vtbox#utils#string#trim(a:line.text),
+        \ "file"  : l:bufnr == 0 ? "" : bufname(l:bufnr),
         \ "line"  : l:bufnr == 0 ? 0 : a:line.lnum
         \ }
 endfunction

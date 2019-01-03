@@ -27,7 +27,7 @@ endfunction
 "
 function s:process(input)
     if has_key(a:input, 'list') || empty(a:input)
-        return vtbox#tasks#list()
+        return vtbox#tasks#list#show()
     endif
 
     if has_key(a:input, "edit")

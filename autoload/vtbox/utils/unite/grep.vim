@@ -26,7 +26,7 @@ let s:__unite__ = {}
 function! s:create()
     let l:unite =  {
         \ 'source' : {
-        \   'name' : vtbox#utils#unite#source('grep'),
+        \   'name' : vtbox#stamp('grep'),
         \   'default_kind' : ["file", "jump_list"],
         \
         \   'gather_candidates' : function('s:gather_candidates'),

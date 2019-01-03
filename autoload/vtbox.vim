@@ -24,8 +24,13 @@ let s:_cache_path_ = {}
 " api :: exception
 "
 function vtbox#throw(label, msg) abort
-    throw s:msg(a:label, a:msg)
+    throw vtbox#stamp(a:label, a:msg)
 endfunction
+
+function vtbox#rethrow(label, msg) abort
+    throw vtbox#stamp(a:label, a:msg, '| rethrown:', v:exception)
+endfunction
+
 
 function vtbox#show_exception(label, ...) abort
     let l:msg = 'v:exception: '.v:exception
@@ -36,43 +41,46 @@ function vtbox#show_exception(label, ...) abort
     call vtbox#error(a:label, l:msg)
 endfunction
 
-
-function vtbox#rethrow(label, msg) abort
-    throw s:msg(a:label, a:msg.' | rethrown: '.v:exception)
-endfunction
-
-
 "
 " api :: logging
 "
+function vtbox#stamp(...)
+    if a:0 == 0
+        return "[vtbox]"
+    endif
+
+    if a:1 == 1
+        return "[vtbox::".a:1."]"
+    endif
+
+    return "[vtbox::".a:1."] ".join(a:000[1:])
+endfunction
+
+
 function vtbox#echo(...)
     if a:0 == 1
         return s:logger.echo('MoreMsg', '[vtbox] '.a:1)
     endif
 
-    return s:logger.echo('MoreMsg', s:msg(a:1, a:2))
+    return s:logger.echo('MoreMsg', vtbox#stamp(a:1, a:2))
 endfunction
 
 
 function vtbox#message(label, msg)
-    call s:logger.echomsg('MoreMsg', s:msg(a:label, a:msg))
+    call s:logger.echomsg('MoreMsg', vtbox#stamp(a:label, a:msg))
 endfunction
 
 function vtbox#warning(label, msg)
-    call s:logger.warn(s:msg(a:label, a:msg))
+    call s:logger.warn(vtbox#stamp(a:label, a:msg))
 endfunction
 
 function vtbox#error(label, msg)
-    call s:logger.error(s:msg(a:label, a:msg))
+    call s:logger.error(vtbox#stamp(a:label, a:msg))
 endfunction
 
 "
 " impl
 "
-function s:msg(label, msg)
-    return '[vtbox::'.a:label.'] '.a:msg
-endfunction
-
 let s:logger = vtbox#vital#lib('Vim.Message')
 
 "---------------------------------------
