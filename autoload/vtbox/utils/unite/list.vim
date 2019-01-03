@@ -11,6 +11,14 @@ function! vtbox#utils#unite#list#create_buffer(name, ...)
                 \ )
 endfunction
 
+
+function! vtbox#utils#unite#list#show_buffer(name, ...)
+    return s:unite().show_buffer(
+                \ a:name,
+                \ vtbox#vital#lib('Data.List').flatten(a:000)
+                \ )
+endfunction
+
 "
 " impl
 "
@@ -33,7 +41,8 @@ function! s:create()
         \   'gather_candidates' : function('s:gather_candidates'),
         \ },
         \
-        \ 'create_buffer' : function('s:create_buffer')
+        \ 'create_buffer' : function('s:create_buffer'),
+        \ 'show_buffer'   : function('s:show_buffer')
         \ }
 
     call unite#define_source(l:unite.source)
@@ -47,7 +56,13 @@ endfunction
 function s:create_buffer(buffer_name, data_list) dict
     call unite#start(
         \   [self.source.name],
-        \   s:create_context(a:buffer_name, a:data_list))
+        \   s:create_context(a:buffer_name, a:data_list, vtbox#utils#unite#persistent_buffer()))
+endfunction
+
+function s:show_buffer(buffer_name, data_list) dict
+    call unite#start(
+        \   [self.source.name],
+        \   s:create_context(a:buffer_name, a:data_list, vtbox#utils#unite#wipe_buffer()))
 endfunction
 
 
@@ -56,11 +71,11 @@ function s:gather_candidates(args, context)
 endfunction
 
 
-function s:create_context(buffer_name, data_list)
+function s:create_context(buffer_name, data_list, buffer_type)
     let l:context = unite#init#_context({})
 
     let l:context.buffer_name = a:buffer_name
-    let l:context.wipe = 0
+    let l:context.wipe = a:buffer_type
     let l:context.items = a:data_list
 
     return l:context
