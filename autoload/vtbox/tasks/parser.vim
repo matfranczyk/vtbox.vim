@@ -36,7 +36,7 @@ function s:process(input)
     endif
 
     if has_key(a:input, "output")
-        return vtbox#tasks#snapshot#unite()
+        return vtbox#tasks#executed#unite()
     endif
 
 endfunction

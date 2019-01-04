@@ -38,7 +38,7 @@ function s:on_done(task_title, exit_status, stdout, stderr, time_start, time_sto
         call s:report_failed(a:stderr, 'failed :: '.a:task_title)
     endif
 
-    return vtbox#tasks#snapshot#save(
+    return vtbox#tasks#executed#snapshot#api().save(
                 \ a:task_title,
                 \ a:exit_status,
                 \ a:stdout,
