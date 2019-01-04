@@ -4,7 +4,7 @@ let s:cpo_save = &cpo | set cpo&vim
 "
 " impl::api
 "
-function vtbox#tasks#executed#unite()
+function vtbox#tasks#executed#show()
     return s:unite().create_buffer()
 endfunction
 

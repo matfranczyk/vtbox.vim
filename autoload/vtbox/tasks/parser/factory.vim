@@ -15,8 +15,8 @@ function vtbox#tasks#parser#factory#create()
                    \ "\t [optional]  show list of available tasks", {'short' : '-e'}
                    \)
 
-    call l:parser.on("--output",
-                   \ "\t [optional]  stdout + stderr from last executed task", {'short' : '-o'}
+    call l:parser.on("--last_executed",
+                   \ "\t [optional]  summary from last execution"
                    \)
 
     return l:parser

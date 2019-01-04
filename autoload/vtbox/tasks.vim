@@ -6,11 +6,24 @@ let s:cpo_save = &cpo | set cpo&vim
 "
 function vtbox#tasks#async(task_title, command)
     if s:job.is_running()
-        return vtbox#warning(vtbox#tasks#stamp(), "previous task's running, please wait oj kill working job :: ".s:job.command())
+        return vtbox#warning(vtbox#tasks#stamp(), "previous task's running, please wait or kill working job :: ".s:job.command())
     endif
 
-    call s:job.command(a:command)
-    call s:job.launch(s:properties(a:task_title))
+    try
+        call s:running_task.value(a:task_title)
+
+        call s:job.command(a:command)
+        call s:job.launch(s:properties(a:task_title))
+    catch
+        call s:running_task.reset()
+        call vtbox#rethrow(
+                    \ vtbox#stamp(vtbox#tasks#stamp(), 'fire up problem'))
+    endtry
+endfunction
+
+
+function vtbox#tasks#running()
+    return s:running_task
 endfunction
 
 
@@ -23,6 +36,8 @@ endfunction
 "
 let s:job = vtbox#job#async#create()
 
+let s:running_task = vtbox#utils#optional#create(
+            \ vtbox#stamp(vtbox#tasks#stamp(), 'running task'))
 
 function s:properties(task_title)
     return {
@@ -32,19 +47,23 @@ endfunction
 
 
 function s:on_done(task_title, exit_status, stdout, stderr, time_start, time_stop)
-    if a:exit_status == 0
-        call vtbox#message(vtbox#tasks#stamp(), 'done :: '.a:task_title)
-    else
-        call s:report_failed(a:stderr, 'failed :: '.a:task_title)
-    endif
+    try
+        if a:exit_status == 0
+            call vtbox#message(vtbox#tasks#stamp(), 'done :: '.a:task_title)
+        else
+            call s:report_failed(a:stderr, 'failed :: '.a:task_title)
+        endif
 
-    return vtbox#tasks#executed#snapshot#api().save(
-                \ a:task_title,
-                \ a:exit_status,
-                \ a:stdout,
-                \ a:stderr,
-                \ a:time_start,
-                \ a:time_stop)
+        call vtbox#tasks#executed#snapshot#api().save(
+                    \ a:task_title,
+                    \ a:exit_status,
+                    \ a:stdout,
+                    \ a:stderr,
+                    \ a:time_start,
+                    \ a:time_stop)
+    finally
+        call s:running_task.reset()
+    endtry
 endfunction
 
 

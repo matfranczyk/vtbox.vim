@@ -35,10 +35,19 @@ function s:process(input)
                     \ vtbox#tasks#toml#file())
     endif
 
-    if has_key(a:input, "output")
-        return vtbox#tasks#executed#unite()
-    endif
+    if has_key(a:input, "last_executed")
+        if vtbox#tasks#running().has_value()
+            return vtbox#warning(vtbox#tasks#stamp(),
+                        \ 'task running: '.vtbox#tasks#running().value(), ' | kill or wait')
+        endif
 
+        if vtbox#tasks#executed#snapshot#api().has_data()
+            return vtbox#tasks#executed#show()
+        endif
+
+        return vtbox#warning(
+                    \ vtbox#tasks#stamp(), 'no finished tasks so far')
+    endif
 endfunction
 
 

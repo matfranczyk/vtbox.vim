@@ -29,6 +29,7 @@ function s:create()
         \ 'stdout' : function('s:stdout'),
         \ 'stderr' : function('s:stderr'),
         \
+        \ 'has_data'   : function('s:has_data'),
         \ 'has_stderr' : function('s:has_stderr'),
         \
         \ 'save'    : function('s:save'),
@@ -47,6 +48,10 @@ function s:stderr() dict
     return self._stderr
 endfunction
 
+
+function s:has_data() dict
+    return !empty(self._title)
+endfunction
 
 function s:has_stderr() dict
     return self._exit_status != 0
