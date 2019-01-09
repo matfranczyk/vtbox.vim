@@ -47,27 +47,17 @@ endfunction
 
 
 function s:gather_candidates(args, context)
-    let l:tittles = keys(a:context.items)
-    let l:cmds    = values(a:context.items)
-
-    let l:items = [] | let i = 0
-
-    while i < len(a:context.items)
-        call add(l:items, s:candidate(l:tittles[i], l:cmds[i]))
-    let i += 1 | endwhile
-
-    return l:items
+    return map(a:context.items, 's:candidate(v:val)')
 endfunction
 
-function s:candidate(task_title, command)
+function s:candidate(item)
     return {
-        \ "word"            : a:task_title.' =>  '.a:command,
+        \ "word"            : a:item.description." ".a:item.command,
         \ "action__command" : printf(
         \                       'call vtbox#tasks#async(%s, %s)',
-        \                       string(a:task_title),
-        \                       string(a:command))
+        \                       string(a:item.description),
+        \                       string(a:item.command))
         \ }
-
 endfunction
 
 
@@ -76,7 +66,7 @@ function s:create_context(buffer_name)
 
     let l:context.buffer_name = a:buffer_name
     let l:context.wipe = vtbox#utils#unite#wipe_buffer()
-    let l:context.items = vtbox#tasks#toml#handler().parse()
+    let l:context.items = vtbox#tasks#toml#handler().parse()[vtbox#tasks#toml#label()]
 
     return l:context
 endfunction

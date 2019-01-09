@@ -12,6 +12,10 @@ function vtbox#tasks#toml#file()
     return s:handler.file()
 endfunction
 
+function vtbox#tasks#toml#label()
+    return "tasks"
+endfunction
+
 "
 " impl::private
 "
