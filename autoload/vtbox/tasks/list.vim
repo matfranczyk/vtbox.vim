@@ -47,12 +47,17 @@ endfunction
 
 
 function s:gather_candidates(args, context)
-    return map(a:context.items, 's:candidate(v:val)')
+    return map(a:context.items[vtbox#tasks#toml#label()], 's:task_candidate(v:val)')
 endfunction
 
-function s:candidate(item)
+
+function s:task_candidate(item)
     return {
-        \ "word"            : a:item.description." ".a:item.command,
+        \ "word" : join(["[task]",
+        \                vtbox#utils#string#format(a:item.description, s:spacing),
+        \                "[command]",
+        \                a:item.command]),
+        \
         \ "action__command" : printf(
         \                       'call vtbox#tasks#async(%s, %s)',
         \                       string(a:item.description),
@@ -66,10 +71,15 @@ function s:create_context(buffer_name)
 
     let l:context.buffer_name = a:buffer_name
     let l:context.wipe = vtbox#utils#unite#wipe_buffer()
-    let l:context.items = vtbox#tasks#toml#handler().parse()[vtbox#tasks#toml#label()]
+    let l:context.items = vtbox#tasks#toml#handler().parse()
 
     return l:context
 endfunction
+
+"
+" impl
+"
+let s:spacing = 50
 
 "---------------------------------------
 let &cpo = s:cpo_save | unlet s:cpo_save
