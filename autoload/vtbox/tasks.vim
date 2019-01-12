@@ -19,6 +19,8 @@ function vtbox#tasks#async(task_title, command)
         call vtbox#rethrow(
                     \ vtbox#stamp(vtbox#tasks#stamp(), 'fire up problem'))
     endtry
+
+    call vtbox#tasks#history#api().save(a:command, a:task_title)
 endfunction
 
 
@@ -38,6 +40,7 @@ let s:job = vtbox#job#async#create()
 
 let s:running_task = vtbox#utils#optional#create(
             \ vtbox#stamp(vtbox#tasks#stamp(), 'running task'))
+
 
 function s:properties(task_title)
     return {

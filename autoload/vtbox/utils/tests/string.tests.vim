@@ -60,6 +60,18 @@ let s:assert = themis#helper('assert')
                     \ )
     endfunction
 
+    "
+    " [test suite]
+    "
+    let s:suite = themis#suite('PadMethodTs')
+
+    function s:suite.pad()
+        let l:txt = 'text'
+        call s:assert.equals(
+                    \ vtbox#utils#string#pad_right(l:txt, len(l:txt)),
+                    \ "text   ")
+    endfunction
+
 "---------------------------------------
 let &cpo = s:cpo_save | unlet s:cpo_save
 "---------------------------------------

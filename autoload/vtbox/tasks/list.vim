@@ -47,13 +47,37 @@ endfunction
 
 
 function s:gather_candidates(args, context)
-    return map(a:context.items[vtbox#tasks#toml#label()], 's:task_candidate(v:val)')
+    let l:tasks = s:collect_tasks(
+            \ a:context.items[vtbox#tasks#toml#label()],
+            \ "[task]",
+            \ ":: tasks from file: ")
+
+    if empty(vtbox#tasks#history#api().list())
+        return l:tasks
+    endif
+
+    return s:collect_tasks(vtbox#tasks#history#api().list(), "")
+       \ + s:comments("")
+       \ + l:tasks
 endfunction
 
 
-function s:task_candidate(item)
+function s:collect_tasks(items, label, ...)
+    let l:tasks = map(a:items, printf('s:task_candidate(v:val, %s)', string(a:label)))
+
+    if !empty(a:000)
+        return extend(s:comments(a:000), l:tasks)
+    endif
+
+    return l:tasks
+endfunction
+
+let s:label = '[task]'
+let s:label_width = len(s:label)
+
+function s:task_candidate(item, label)
     return {
-        \ "word" : join(["[task]",
+        \ "word" : join([vtbox#utils#string#pad_right(a:label, s:label_width),
         \                vtbox#utils#string#format(a:item.description, s:spacing),
         \                "[command]",
         \                a:item.command]),
@@ -63,6 +87,16 @@ function s:task_candidate(item)
         \                       string(a:item.description),
         \                       string(a:item.command))
         \ }
+endfunction
+
+
+function s:comment_candidate(text)
+    return { "word" : a:text, "action__command" : '' }
+endfunction
+
+function s:comments(txt)
+    return map(type(a:txt) == type([]) ? copy(a:txt) : [a:txt],
+            \ 's:comment_candidate(v:val)')
 endfunction
 
 
