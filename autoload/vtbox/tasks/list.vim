@@ -45,41 +45,34 @@ function s:create_buffer() dict
         \   s:create_context(self.source.name))
 endfunction
 
+let s:labels = {'file' : "[task::file]", 'mru' : "[task::mru]"}
+let s:label_width = max( map(values(s:labels), 'len(v:val)') )
+
 
 function s:gather_candidates(args, context)
     let l:tasks = s:collect_tasks(
-            \ a:context.items[vtbox#tasks#toml#label()],
-            \ "[task]",
-            \ ":: tasks from file: ")
+            \ a:context.items[vtbox#tasks#toml#label()], s:labels.file)
 
     if empty(vtbox#tasks#history#api().list())
         return l:tasks
     endif
 
-    return s:collect_tasks(vtbox#tasks#history#api().list(), "")
+    return s:collect_tasks(vtbox#tasks#history#api().list(), s:labels.mru)
        \ + s:comments("")
        \ + l:tasks
 endfunction
 
 
 function s:collect_tasks(items, label, ...)
-    let l:tasks = map(a:items, printf('s:task_candidate(v:val, %s)', string(a:label)))
-
-    if !empty(a:000)
-        return extend(s:comments(a:000), l:tasks)
-    endif
-
-    return l:tasks
+    return map(a:items, printf('s:task_candidate(v:val, %s)', string(a:label)))
 endfunction
 
-let s:label = '[task]'
-let s:label_width = len(s:label)
 
 function s:task_candidate(item, label)
     return {
         \ "word" : join([vtbox#utils#string#pad_right(a:label, s:label_width),
         \                vtbox#utils#string#format(a:item.description, s:spacing),
-        \                "[command]",
+        \                "[cmd]",
         \                a:item.command]),
         \
         \ "action__command" : printf(
