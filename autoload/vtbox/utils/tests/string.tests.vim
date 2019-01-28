@@ -68,8 +68,8 @@ let s:assert = themis#helper('assert')
     function s:suite.pad()
         let l:txt = 'text'
         call s:assert.equals(
-                    \ vtbox#utils#string#pad_right(l:txt, len(l:txt)),
-                    \ "text   ")
+                    \ vtbox#utils#string#pad_right(l:txt, len(l:txt) + 1),
+                    \ "text ")
     endfunction
 
 "---------------------------------------
