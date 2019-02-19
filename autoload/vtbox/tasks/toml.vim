@@ -17,15 +17,37 @@ function vtbox#tasks#toml#label()
 endfunction
 
 "
-" impl::private
+" impl:: task file contnet
 "
-let s:file = vtbox#workspace#manager().cache_path()."/async_tasks.toml"
+let s:header_path = fnamemodify(expand('<sfile>'), ":p:h")."/header"
 
-function s:content_factory()
-    return ["task_1 = 'clang --version'", "task_2 = 'clang --version'"]
+function s:header()
+    return vtbox#utils#filesystem#get_file_content(
+                \ s:header_path."/tasks.header")
 endfunction
 
-let s:handler = vtbox#toml#handler#create(s:file, function('s:content_factory'))
+function s:task(command, description)
+    return [
+    \ "",
+    \ "[[".vtbox#tasks#toml#label()."]]",
+    \ "\t command     = '".a:command."'",
+    \ "\t description = '".a:description."'",
+    \ ]
+endfunction
+
+function s:content_factory()
+    return extend(s:header(), s:task("ls -l", "[example] list file"))
+endfunction
+
+
+"
+" impl :: project task file
+"
+let s:project_task_file = vtbox#workspace#manager().cache_path()."/async_tasks.toml"
+
+let s:handler = vtbox#toml#handler#create(
+            \ s:project_task_file,
+            \ function('s:content_factory'))
 
 "---------------------------------------
 let &cpo = s:cpo_save | unlet s:cpo_save

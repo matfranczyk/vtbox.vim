@@ -1,0 +1,12 @@
+# --------------------------------------------------------------------------------------------
+#  [[TASKS]] configuration                 toml files format: https://github.com/toml-lang/toml
+# --------------------------------------------------------------------------------------------
+# (x) every tasks need to has following format:
+#
+#  [[tasks]]
+#    command     = 'clang --version'
+#    description = 'clang: query version'
+#
+# (x) 'command'     - [mandatory] it's bash command
+# (x) 'description' - [mandatory] description, visible in unite buffer
+# --------------------------------------------------------------------------------------------
