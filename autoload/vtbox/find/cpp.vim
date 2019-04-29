@@ -9,7 +9,7 @@ function vtbox#find#cpp#flip_source(...)
         let l:filename = vtbox#utils#cpp#flip(
                             \ vtbox#utils#filesystem#current_filename())
     catch
-        return vtbox#show_exception(s:label, 'cannot resolve filename')
+        return vtbox#show_exception('find::cpp', 'cannot resolve filename')
     endtry
 
     let l:object =  vtbox#find#object#new({'paths' : expand("%:p:h:h")})
@@ -20,11 +20,6 @@ function vtbox#find#cpp#flip_source(...)
                 \ empty(a:000) ? 'edit' : 'unite')
 
 endfunction
-
-"
-" impl
-"
-let s:label = 'find::cpp'
 
 "---------------------------------------
 let &cpo = s:cpo_save | unlet s:cpo_save

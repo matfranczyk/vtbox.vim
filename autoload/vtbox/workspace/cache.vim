@@ -5,13 +5,14 @@ let s:cpo_save = &cpo | set cpo&vim
 " usr:api
 "
 function vtbox#workspace#cache#local()
+"{{{
     if empty(s:_instance_)
         let s:_instance_ = s:factory()
     endif
     return s:_instance_
 endfunction
 let s:_instance_ = {}
-
+"}}}
 
 function vtbox#workspace#cache#dirname()
     return s:dirname

@@ -5,12 +5,14 @@ let s:cpo_save = &cpo | set cpo&vim
 " usr:api
 "
 function vtbox#workspace#manager()
+"{{{
     if empty(s:_instance_)
         let s:_instance_ = s:factory()
     endif
     return s:_instance_
 endfunction
 let s:_instance_ = {}
+"}}}
 
 "
 " impl
