@@ -108,6 +108,37 @@ let s:assert = themis#helper('assert')
                     \ self.valid_path)
     endfunction
 
+    "
+    " [test suite]
+    "
+    let s:suite = themis#suite('windows::path')
+
+    function! s:suite.windows_path()
+        let l:path = '/mnt/c/file.txt'
+        call s:assert.equals(
+                    \ vtbox#utils#filesystem#win_format(l:path),
+                    \ '\mnt\c\file.txt'
+                    \ )
+    endfunction
+
+
+    function! s:suite.convert_from_wsl()
+        let l:path = '/mnt/c/file.txt'
+        call s:assert.equals(
+                    \ vtbox#utils#filesystem#win_path_from_wsl(l:path),
+                    \ 'c:\file.txt'
+                    \ )
+    endfunction
+
+    function! s:suite.convert_from_wsl_2()
+        let l:path = '/mnt/c/SWX/Products/System1300/Text/English lang/Webserver.men'
+        call s:assert.equals(
+                    \ vtbox#utils#filesystem#win_path_from_wsl(l:path),
+                    \ 'c:\SWX\Products\System1300\Text\English lang\Webserver.men'
+                    \ )
+    endfunction
+
+
 "---------------------------------------
 let &cpo = s:cpo_save | unlet s:cpo_save
 "---------------------------------------

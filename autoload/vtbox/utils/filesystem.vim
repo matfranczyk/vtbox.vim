@@ -94,8 +94,24 @@ function vtbox#utils#filesystem#return_first_valid_directory(...)
 endfunction
 
 
-let s:prelude_lib = vtbox#vital#lib('Prelude')
-let s:buffers_lib = vtbox#vital#lib('Vim.Buffer')
+function vtbox#utils#filesystem#win_format(path)
+    return s:filepath_lib.winpath(a:path)
+endfunction
+
+function vtbox#utils#filesystem#win_path_from_wsl(path)
+    let l:temp = s:filepath_lib.winpath(
+                \ s:string_lib.replace_first(a:path, '/mnt/', ''))
+
+    return l:temp[0].':'.l:temp[1:]
+endfunction
+
+"
+" libraries
+"
+let s:prelude_lib  = vtbox#vital#lib('Prelude')
+let s:buffers_lib  = vtbox#vital#lib('Vim.Buffer')
+let s:filepath_lib = vtbox#vital#lib('System.Filepath')
+let s:string_lib   = vtbox#vital#lib('Data.String')
 
 "---------------------------------------
 let &cpo = s:cpo_save | unlet s:cpo_save
