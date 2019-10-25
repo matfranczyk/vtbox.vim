@@ -138,6 +138,15 @@ let s:assert = themis#helper('assert')
                     \ )
     endfunction
 
+    function! s:suite.convert_to_wsl_from_windows_1()
+        let l:win_path = 'C:\Users\FRMA\storage.Mateusz\test folder\filename.txt'
+        let l:expected_wsl_path = '/mnt/c/Users/FRMA/storage.Mateusz/test\ folder/filename.txt'
+
+        call s:assert.equals(
+                    \ vtbox#utils#filesystem#win_path_to_wsl(l:win_path),
+                    \ l:expected_wsl_path
+                    \ )
+    endfunction
 
 "---------------------------------------
 let &cpo = s:cpo_save | unlet s:cpo_save

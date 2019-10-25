@@ -105,6 +105,14 @@ function vtbox#utils#filesystem#win_path_from_wsl(path)
     return l:temp[0].':'.l:temp[1:]
 endfunction
 
+function vtbox#utils#filesystem#win_path_to_wsl(path)
+    " lower disc name + bypass : sign
+    let l:path = '/mnt/' . tolower(a:path[0]) . s:filepath_lib.unixpath(a:path[2:])
+
+    return s:string_lib.replace(l:path, ' ', '\ ')
+
+endfunction
+
 "
 " libraries
 "
