@@ -25,6 +25,9 @@ cabbrev gg Grep
 command!  -nargs=* -complete=customlist,vtbox#grep#parser#complete
          \ Grep :call vtbox#grep#parser#execute(<q-args>)
 
+command!  -nargs=* -complete=customlist,vtbox#file#command#complete
+         \ File :call vtbox#file#command#execute(<q-args>)
+
 "
 " bootstrap: workspace
 "
