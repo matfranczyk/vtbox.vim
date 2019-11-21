@@ -28,8 +28,7 @@ command!  -nargs=* -complete=customlist,vtbox#grep#parser#complete
 command!  -nargs=* -complete=customlist,vtbox#file#command#complete
          \ File :call vtbox#file#command#execute(<q-args>)
 
-command!  -nargs=* -complete=customlist,vtbox#open#command#complete
-         \ Open :call vtbox#open#command#execute(<q-args>)
+command!  -nargs=* Open :call vtbox#open#command#execute(<q-args>)
 
 "
 " bootstrap: workspace

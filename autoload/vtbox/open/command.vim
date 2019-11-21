@@ -2,68 +2,51 @@
 let s:cpo_save = &cpo | set cpo&vim
 "----------------------------------
 
-let s:parser = vtbox#open#parser#create()
-let s:logger = vtbox#utils#logger#create()
-
-
 "
-" impl::api
+" api
 "
-function vtbox#open#command#complete(arglead, cmdline, cursorpos)
-    return s:parser.complete(a:arglead, a:cmdline, a:cursorpos)
-endfunction
-
-function vtbox#open#command#execute(qargs)
-    return vtbox#utils#vital#OptionParser#generic_execution(
-                \ s:parse(a:qargs),
-                \ function('s:is_input_valid'),
-                \ function('s:process'),
-                \ s:parser,
-                \ s:logger)
+function vtbox#open#command#execute(args)
+    let l:path = s:PathResolver(a:args)
+    execute "edit ".l:path
 endfunction
 
 "
 " impl
 "
-function s:process(input)
-    if has_key(a:input, 'split')
-        echo "split ".join(a:input['files'])
-        return
+function s:createPathResolver()
+    if vtbox#utils#os#is_wsl()
+        function s:pathResolver_WSL(path)
+            if vtbox#utils#filesystem#is_windows_path(a:path)
+                return vtbox#utils#filesystem#win_path_to_wsl(a:path)
+            elseif vtbox#utils#filesystem#is_linux_path(a:path)
+                return a:path
+            endif
+
+            call vtbox#throw(s:label."WSL::path:resolver", "unkown path")
+        endfunction
+
+        return function("s:pathResolver_WSL")
     endif
 
-    if has_key(a:input, 'vsplit')
-        echo "vsplit ".join(a:input['files'])
-        return
+    if vtbox#utils#os#is_linux()
+        function s:pathResolver_linux(path)
+            if vtbox#utils#filesystem#is_linux_path(a:path)
+                return a:path
+            endif
+
+            call vtbox#throw(s:label."linux:path:resolver", "unkown path")
+        endfunction
+
+        return function("s:pathResolver_linux")
     endif
 
-    if has_key(a:input, 'tab')
-        echo "tab ".join(a:input['files'])
-        return
-    endif
+    call vtbox#throw(s:label., "createPathResolver <-> missing implementation")
 endfunction
 
 
-function s:is_input_valid(parsed)
-    call s:logger.clear()
-
-    " check every file that is passed here - and provide echo about invalid files
-
-    if !vtbox#utils#vital#OptionParser#any_known_option(a:parsed, s:parser)
-        call s:logger.append('no valid options provided')
-    endif
-
-    return s:logger.empty()
-endfunction
-
-
-function s:parse(qargs)
-    let l:parsed = s:parser.parse(a:qargs)
-    let l:parsed["files"] = deepcopy(l:parsed.__unknown_args__)
-
-    unlet l:parsed.__unknown_args__ | return l:parsed
-endfunction
+let s:PathResolver = s:createPathResolver()
+let s:label = 'open::command'
 
 "---------------------------------------
 let &cpo = s:cpo_save | unlet s:cpo_save
 "---------------------------------------
-
