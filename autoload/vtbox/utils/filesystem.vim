@@ -94,6 +94,23 @@ function vtbox#utils#filesystem#return_first_valid_directory(...)
 endfunction
 
 
+function vtbox#utils#filesystem#is_linux_path(path)
+    try
+        return len(a:path) > 0 && '/' == a:path[0]
+    catch
+        return 0
+    endtry
+endfunction
+
+function vtbox#utils#filesystem#is_windows_path(path)
+    try
+        return len(a:path) > 0 && ':' == a:path[1]
+    catch
+        return 0
+    endtry
+endfunction
+
+
 function vtbox#utils#filesystem#win_format(path)
     return s:filepath_lib.winpath(a:path)
 endfunction
