@@ -116,9 +116,9 @@ let s:assert = themis#helper('assert')
 
     function! s:suite.is_windows_path()
         call s:assert.true(
-                    \ vtbox#utils#filesystem#is_windows_path('c:\windows\path'))
+                    \ vtbox#utils#filesystem#is_windows_abspath('c:\windows\path'))
         call s:assert.false(
-                    \ vtbox#utils#filesystem#is_windows_path('/home/value'))
+                    \ vtbox#utils#filesystem#is_windows_abspath('/home/value'))
     endfunction
 
 

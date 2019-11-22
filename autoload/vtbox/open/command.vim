@@ -23,7 +23,7 @@ function s:createPathResolver()
                 return a:file
             endif
 
-            if vtbox#utils#filesystem#is_windows_path(a:file)
+            if vtbox#utils#filesystem#is_windows_abspath(a:file)
                 let l:file = vtbox#utils#filesystem#win_path_to_wsl(a:file)
                 if filereadable(l:file)
                     return l:file

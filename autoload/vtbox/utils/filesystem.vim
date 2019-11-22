@@ -94,12 +94,8 @@ function vtbox#utils#filesystem#return_first_valid_directory(...)
 endfunction
 
 
-function vtbox#utils#filesystem#is_windows_path(path)
-    try
-        return len(a:path) > 0 && ':' == a:path[1]
-    catch
-        return 0
-    endtry
+function vtbox#utils#filesystem#is_windows_abspath(path)
+    return len(a:path) > 0 && a:path[1] == ':'
 endfunction
 
 
