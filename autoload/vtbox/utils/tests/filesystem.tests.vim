@@ -114,13 +114,6 @@ let s:assert = themis#helper('assert')
     let s:suite = themis#suite('windows::path')
 
 
-    function! s:suite.is_linux_path()
-        call s:assert.true(
-                    \ vtbox#utils#filesystem#is_linux_path('/home/value'))
-        call s:assert.false(
-                    \ vtbox#utils#filesystem#is_linux_path('c:\windows\path'))
-    endfunction
-
     function! s:suite.is_windows_path()
         call s:assert.true(
                     \ vtbox#utils#filesystem#is_windows_path('c:\windows\path'))

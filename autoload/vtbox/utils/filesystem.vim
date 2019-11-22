@@ -94,14 +94,6 @@ function vtbox#utils#filesystem#return_first_valid_directory(...)
 endfunction
 
 
-function vtbox#utils#filesystem#is_linux_path(path)
-    try
-        return len(a:path) > 0 && '/' == a:path[0]
-    catch
-        return 0
-    endtry
-endfunction
-
 function vtbox#utils#filesystem#is_windows_path(path)
     try
         return len(a:path) > 0 && ':' == a:path[1]
@@ -127,7 +119,6 @@ function vtbox#utils#filesystem#win_path_to_wsl(path)
     let l:path = '/mnt/' . tolower(a:path[0]) . s:filepath_lib.unixpath(a:path[2:])
 
     return s:string_lib.replace(l:path, ' ', '\ ')
-
 endfunction
 
 "
