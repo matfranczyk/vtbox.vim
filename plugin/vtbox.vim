@@ -17,18 +17,33 @@ let g:__vtbox_buffer_shortner_sign = '.....'
 "
 " define commands
 "
-cabbrev ff FindFile
 command! -nargs=* -complete=customlist,vtbox#find#parser#completion
         \ FindFile :call vtbox#find#parser#execute(<q-args>)
+cabbrev ff FindFile
 
-cabbrev gg Grep
 command!  -nargs=* -complete=customlist,vtbox#grep#parser#complete
          \ Grep :call vtbox#grep#parser#execute(<q-args>)
+cabbrev gg Grep
 
 command!  -nargs=* -complete=customlist,vtbox#file#command#complete
          \ File :call vtbox#file#command#execute(<q-args>)
 
-command!  -nargs=* Open :call vtbox#open#command#execute(<q-args>)
+
+
+cnoreabbrev     o Open
+cnoreabbrev     e Open
+command! -nargs=1 Open         :call vtbox#open#command#execute(<q-args>, 'edit')
+
+cnoreabbrev     s  OpenInSplit
+command! -nargs=1  OpenInSplit  :call vtbox#open#command#execute(<q-args>, 'split')
+
+cnoreabbrev    v  OpenInVSplit
+cnoreabbrev    vs OpenInVSplit
+command! -nargs=1 OpenInVSplit :call vtbox#open#command#execute(<q-args>, 'vsplit')
+
+cnoreabbrev     t OpenInTab
+command! -nargs=1 OpenInTab    :call vtbox#open#command#execute(<q-args>, 'tabnew')
+
 
 "
 " bootstrap: workspace
