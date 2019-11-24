@@ -81,7 +81,7 @@ function s:create_path_resolver()
     endif
 
     if vtbox#utils#os#is_linux()
-        function s:linux_path_resolver(file)
+        function s:resolver(file)
             if filereadable(a:file)
                 return a:file
             endif
