@@ -8,6 +8,19 @@ function vtbox#open#utils#createResolver()
     return s:create_path_resolver()
 endfunction
 
+function vtbox#open#utils#parse(file)
+    let l:obj = {
+        \ 'filepath'   : s:filepath(a:file),
+        \ 'lineNumber' : vtbox#utils#optional#create('lineNumber')
+        \ }
+
+    if s:hasLineNumber(a:file)
+        call l:obj.lineNumber.value( s:lineNumber(a:file) )
+    endif
+
+    return l:obj
+endfunction
+
 "
 "
 " impl :: parser

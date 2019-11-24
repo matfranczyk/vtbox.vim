@@ -97,12 +97,19 @@ let s:method = themis#helper('scope').funcs(s:impl_file)
     let s:suite = themis#suite('parser')
 
 
-    function! s:suite.whitespace_after_fileNumber()
-        let l:obj = s:method.parse('file:124')
+    function! s:suite.parser_finds_line_number()
+        let l:obj = vtbox#open#utils#parse('file :124')
 
         call s:assert.equal(l:obj.filepath, "file")
         call s:assert.true(l:obj.lineNumber.has_value())
         call s:assert.equal(l:obj.lineNumber.value(), ":124")
+    endfunction
+
+    function! s:suite.parser_set_not_file_number()
+        let l:obj = vtbox#open#utils#parse(' /path/file ')
+
+        call s:assert.equal(l:obj.filepath, "/path/file")
+        call s:assert.false(l:obj.lineNumber.has_value())
     endfunction
 
 "---------------------------------------

@@ -4,9 +4,15 @@ let s:cpo_save = &cpo | set cpo&vim
 "
 " api
 "
-function vtbox#open#command#execute(args, mode)
+function vtbox#open#command#execute(args, opening_mode)
     try
-        execute a:mode." ".s:filepath(a:args)
+        let l:parsed = vtbox#open#utils#parse(a:args)
+
+        execute a:opening_mode." ".s:filepath(l:parsed.filepath)
+
+        if(l:parsed.lineNumber.has_value())
+            execute l:parsed.lineNumber.value()
+        endif
     catch
         return vtbox#show_exception('open::command')
     endtry
