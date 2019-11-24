@@ -4,14 +4,14 @@ let s:cpo_save = &cpo | set cpo&vim
 "
 " api
 "
-function vtbox#open#utils#parse(file)
+function vtbox#open#utils#parse(input)
     let l:obj = {
-        \ 'filepath'   : s:filepath(a:file),
+        \ 'filepath'   : s:filepath(a:input),
         \ 'lineNumber' : vtbox#utils#optional#create('lineNumber')
         \ }
 
-    if s:hasLineNumber(a:file)
-        call l:obj.lineNumber.value( s:lineNumber(a:file) )
+    if s:hasLineNumber(a:input)
+        call l:obj.lineNumber.value( s:lineNumber(a:input) )
     endif
 
     return l:obj
@@ -57,19 +57,6 @@ endfunction
 "
 " impl :: parser
 "
-function s:parse(file)
-    let l:obj = {
-        \ 'filepath'   : s:filepath(a:file),
-        \ 'lineNumber' : vtbox#utils#optional#create('lineNumber')
-        \ }
-
-    if s:hasLineNumber(a:file)
-        call l:obj.lineNumber.value( s:lineNumber(a:file) )
-    endif
-
-    return l:obj
-endfunction
-
 
 let s:regex_lineNumber = ':\d\+\s*$'
 let s:regex_fileWithLineNumber = '\p\+'.s:regex_lineNumber
