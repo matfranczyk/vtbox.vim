@@ -18,7 +18,7 @@ function vtbox#find#execute(find_object, opening_mode, ...)
     if (a:opening_mode == "unite") || (len(l:stdout) > 1)
         return vtbox#utils#unite#files_list#buffer(
             \ l:stdout,
-            \ empty(a:000) ? 'files::list' : a:1)
+            \ empty(a:000) ? s:label : a:1)
     endif
 
     return vtbox#utils#vim#open_file(l:stdout[0], a:opening_mode)
@@ -38,7 +38,7 @@ endfunction
 "
 " impl
 "
-let s:label = 'grep'
+let s:label = 'find'
 
 function s:command(find_object)
     return join(a:find_object.commands(), " ; ")

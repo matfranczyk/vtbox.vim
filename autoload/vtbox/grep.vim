@@ -17,7 +17,7 @@ function vtbox#grep#execute(object, ...)
 
     return vtbox#utils#unite#grep#create_buffer(
                 \ l:stdout,
-                \ empty(a:000) ? 'grep' : a:1)
+                \ empty(a:000) ? s:label : a:1)
 endfunction
 
 
